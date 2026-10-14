@@ -9,7 +9,11 @@ How to test the skills, what to look for, and a log of results.
    such as provenance files don't land among the skill files.
 2. Start a fresh session for each test, unless the test says to continue.
    Leftover context hides gaps in the instructions.
-3. Optional: compare with the skills turned off. In Claude Code, type
+3. Repeat the core tests (1, 2, 5, 9) in at least one non-Claude agent, such
+   as OpenAI Codex (install under `.agents/skills`; see the README). Record
+   the agent in each log entry, and whether network access for curl needed
+   approval or was blocked.
+4. Optional: compare with the skills turned off. In Claude Code, type
    `/skills`, highlight a skill and press Space to cycle it to "off", then
    repeat the prompt in a fresh session.
 

@@ -14,6 +14,12 @@ skill is acting on their behalf.
 The skills are read-only on WorkflowHub. They write only into the researcher's
 own project, and only with the researcher's agreement.
 
+This file is read by several agents: Claude Code through `CLAUDE.md`, and
+OpenAI Codex and others directly. Keep it agent-neutral. The skills themselves
+are written to work in any agent that supports the Agent Skills format: don't
+name one agent's tools or commands inside a `SKILL.md`. Refer to capabilities
+("make an HTTP request") and let the agent choose the tool.
+
 ## Layout
 
 - `skills/`: complete skills, one folder each with a `SKILL.md` (and

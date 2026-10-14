@@ -162,6 +162,36 @@ To check that they loaded, start a session in the project and type `/skills`,
 or ask "What skills are available?". The first time a skill contacts
 WorkflowHub, Claude Code will ask permission to run curl.
 
+### Install in OpenAI Codex
+
+Codex reads skills from `.agents/skills` (not `.claude/skills`): in the
+project, in any folder between the working directory and the repository root,
+or in `~/.agents/skills` for every project. From the root of this repository:
+
+```bash
+mkdir -p /path/to/your-project/.agents/skills
+cp -R skills/* /path/to/your-project/.agents/skills/
+```
+
+Codex follows symlinked skill folders, so you can link them instead of
+copying. Type `/skills` or `$` to check that they loaded, and `$workflowhub-find`
+to invoke one by name. Without naming one, Codex picks a skill by its
+description.
+
+The skills use only the standard `name` and `description` fields plus the
+specification's optional ones, so they need no Codex-specific files. An
+`agents/openai.yaml` is optional, for example to turn off implicit
+invocation. It isn't needed here.
+
+Codex reads `AGENTS.md` itself. That file explains the purpose of this
+repository, and `CLAUDE.md` only imports it, so the two tools see the same
+guidance.
+
+**Not yet tested with Codex.** One thing to check first: the interim route
+uses curl, and Codex's sandbox may block network access or ask for approval.
+The OpenAI documentation doesn't say how its sandbox settings affect skills
+that make HTTP requests. Record what happens in [TESTING.md](TESTING.md).
+
 ### Install in other agents
 
 Copy the folders from `skills/` into the agent's skills directory. Check that
