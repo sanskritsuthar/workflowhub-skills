@@ -317,7 +317,8 @@ Found in the first test (details in [TESTING.md](TESTING.md)):
 
 ## License
 
- Not yet decided. The skill files currently declare BSD-3-Clause, pending the team's decision.
+BSD-3-Clause. See [LICENSE](LICENSE). Each `SKILL.md` and the plugin manifests
+declare the same license.
 
 ## Maintainers
 
