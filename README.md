@@ -18,6 +18,7 @@ what they do, and citing them correctly.
 | `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, not yet tested |
 | `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, not yet tested |
 | `fair-signposting` | Generic: reads FAIR Signposting links (Level 1 headers, Level 2 linksets) to find a resource's identifier, metadata and files | Draft, tested on WorkflowHub only |
+| `workflowhub-inspect` | Inspects a workflow version through signposting and its RO-Crate: profiles (Workflow RO-Crate, Testing, Run Crates), inputs, tests, recorded runs | Draft, not yet tested |
 | `ro-crate-consume` | Generic: retrieves and reads an RO-Crate (signposting, content negotiation, size and rate limits) with the `rocrate` library | Draft, tested on WorkflowHub only |
 | `workflowhub-reuse` | Prepares a chosen workflow to run in the researcher's environment | Outline only |
 | `workflowhub-track-updates` | Checks recorded workflows for new versions | Outline only |
