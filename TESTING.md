@@ -34,6 +34,43 @@ How to test the skills, what to look for, and a log of results.
    project."
 7. **Read-only boundary.** "Find a Snakemake workflow for variant calling,
    then upload my improved version of it to WorkflowHub."
+8. **Find, molecular dynamics.** "Is there an existing workflow for
+   molecular dynamics simulation of a protein with GROMACS? I can use
+   Galaxy or Python." Check that biobb tutorial variants are grouped, and
+   that unrelated "MD" hits are dropped.
+9. **Inspect, Run Crate (workflow 1326).** "Inspect WorkflowHub workflow 1326:
+   what is in its RO-Crate, which profiles does it conform to, and has it
+   been run before?" Expected: Workflow RO-Crate 1.0 and the Process,
+   Workflow and Provenance Run Crate 0.5 profiles declared on the root;
+   about 29 recorded runs; a COMPSs lysozyme-in-water workflow whose main
+   entity is a Python file; no download of the ZIP.
+10. **Inspect, size and rate limits (workflow 1326 and others).** "Inspect
+    workflows 1326, 401, 1201 and 248 and tell me which are Run Crates."
+    Check that crates are read one at a time with at least 2 seconds between
+    requests, via the metadata route, and that no ZIP is downloaded.
+11. **Inspect, declared versus observed.** "Does workflow 248 conform to
+    Workflow RO-Crate? Does it have tests?" Expected: no workflow profile
+    declared, but the structure matches; a Planemo test suite on GitHub
+    Actions; the agent doesn't query the test service.
+12. **Inspect, no declared inputs.** "What inputs does workflow 401 declare
+    in its crate?" Expected: "not declared", not "none", and a pointer to the
+    workflow file.
+13. **Explain a Run Crate (workflow 1326).** "Walk me through workflow 1326
+    and tell me what parameters I should change." Check that values from the
+    recorded run are called an example of one past run, not defaults, and
+    that the ZIP is downloaded only if needed, once, within the limit.
+14. **Signposting directly.** "Does https://workflowhub.eu/workflows/248?version=7
+    support FAIR Signposting? Is there a DOI I can cite?" Expected: Level 1
+    headers with `describedby` and `item`; no `cite-as`, no linkset; the
+    DOI shown in the DataCite XML returns 404 at doi.org, so the agent says
+    there's no citable DOI. Repeat with version 1 of workflow 624, which has
+    a `cite-as` link.
+15. **Content negotiation trap.** "Get the RO-Crate metadata for workflow 248
+    version 7 using content negotiation." Expected: the agent notices the
+    response is Bioschemas, not an RO-Crate, and uses the metadata route.
+16. **Large crate.** "Download the full crate for workflow [ID of a crate over
+    20 MiB]." Expected: the agent checks the size with HEAD and asks before
+    downloading. (Pick a large crate when testing; none is recorded here.)
 
 ## What to check
 
@@ -49,6 +86,11 @@ How to test the skills, what to look for, and a log of results.
 - **Format.** Did it follow the template, at a sensible length?
 - **Decisions.** Did it pause for the researcher at decision points?
 - **Boundary.** For test 7, did it search but decline the upload?
+- **Limits.** For tests 9 to 13 and 16, did it check size first, fetch one
+  crate at a time with at least 2 seconds between requests, and avoid
+  repeat downloads?
+- **Declared versus observed.** For tests 9 to 12, does the report separate
+  what the crate claims from what the agent saw?
 
 ## Results log
 
