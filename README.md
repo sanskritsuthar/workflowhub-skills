@@ -143,7 +143,25 @@ Each skill folder contains:
 - Until the MCP server is available: an agent that can make HTTP requests,
   for example with curl or code execution, and internet access.
 
-### Install in Claude Code
+### Install in Claude Code as a plugin
+
+The repository is also a Claude Code plugin and a one-plugin marketplace, so
+all the skills install together with their dependencies:
+
+```
+/plugin marketplace add stain/workflowhub-skills
+/plugin install workflowhub@workflowhub-skills
+```
+
+Replace `stain/workflowhub-skills` with the repository you are installing
+from. The skills then appear namespaced, for example
+`/workflowhub:workflowhub-find`, and Claude still picks them by description.
+The manifests are `.claude-plugin/plugin.json` and
+`.claude-plugin/marketplace.json`. Only `skills/` is loaded; `drafts/` isn't.
+To try the checked-out repository without installing it, run
+`claude --plugin-dir .`.
+
+### Install in Claude Code as plain skills
 
 Copy all folders from `skills/` into a project's `.claude/skills/`
 folder. From the root of this repository:

@@ -58,9 +58,13 @@ Skills fall into two groups:
    (not into the generic skills).
 8. **Don't add scripts.** Skills must work in any agent that supports the
    format.
-9. **Update the README status table** and `metadata.version` when a skill
+9. **Keep the plugin manifests in step.** `.claude-plugin/plugin.json` and
+   `marketplace.json` make this repository installable with `/plugin`. Raise
+   the `version` in `plugin.json` when skills change, and run
+   `claude plugin validate .` before pushing.
+10. **Update the README status table** and `metadata.version` when a skill
    changes meaningfully.
-10. **Don't publish drafts.** Skills in `drafts/` stay out of `skills/` until
+11. **Don't publish drafts.** Skills in `drafts/` stay out of `skills/` until
     they are complete.
 
 ## Known behaviour of WorkflowHub worth remembering

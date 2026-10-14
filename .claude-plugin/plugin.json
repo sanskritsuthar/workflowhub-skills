@@ -1,0 +1,12 @@
+{
+  "name": "workflowhub",
+  "description": "Agent skills for finding, evaluating, inspecting, explaining and citing workflows on WorkflowHub, plus generic FAIR Signposting and RO-Crate reading skills. Read-only on WorkflowHub.",
+  "version": "0.1.0",
+  "author": {
+    "name": "eScience Lab, The University of Manchester"
+  },
+  "homepage": "https://github.com/stain/workflowhub-skills",
+  "repository": "https://github.com/stain/workflowhub-skills",
+  "license": "BSD-3-Clause",
+  "keywords": ["workflowhub", "workflows", "ro-crate", "fair-signposting", "research"]
+}
