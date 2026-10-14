@@ -75,6 +75,13 @@ Read the title, creators in the order listed, owning team, version number and
 date, DOI if one exists, license, workflow type, source repository and any
 linked publication.
 
+The DataCite XML from the workflow's FAIR Signposting link (see
+`references/tools.md`) gives the creators, title and DOI in a standard form,
+and is a good second source for this step. Take creators from `creators` and
+`other_creators`, never from the submitter. A DOI in the DataCite XML counts
+only if a `cite-as` link, the JSON API or a DOI resolver confirms it; otherwise treat the DOI
+as unknown.
+
 ### 3. Compose the citation
 
 Follow `references/citation-formats.md`. In short:

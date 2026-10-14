@@ -17,6 +17,8 @@ what they do, and citing them correctly.
 | `workflowhub-evaluate` | Judges whether specific workflows fit a researcher's data and purpose, and compares candidates | Draft, not yet tested |
 | `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, not yet tested |
 | `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, not yet tested |
+| `fair-signposting` | Generic: reads FAIR Signposting links (Level 1 headers, Level 2 linksets) to find a resource's identifier, metadata and files | Draft, tested on WorkflowHub only |
+| `ro-crate-consume` | Generic: retrieves and reads an RO-Crate (signposting, content negotiation, size and rate limits) with the `rocrate` library | Draft, tested on WorkflowHub only |
 | `workflowhub-reuse` | Prepares a chosen workflow to run in the researcher's environment | Outline only |
 | `workflowhub-track-updates` | Checks recorded workflows for new versions | Outline only |
 | `workflowhub-survey` | Surveys everything on a topic, for reviews and curation | Outline only |
@@ -114,7 +116,7 @@ Each skill folder contains:
 
 ### Install in Claude Code
 
-Copy the four folders from `skills/` into a project's `.claude/skills/`
+Copy the folders from `skills/` into a project's `.claude/skills/`
 folder. From the root of this repository:
 
 ```bash

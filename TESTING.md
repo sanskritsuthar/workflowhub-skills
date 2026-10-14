@@ -64,6 +64,20 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-10-14: Molecular dynamics search and FAIR Signposting check
+
+- **Agent and route:** Claude Code, public API plus HTTP `Link` headers
+- **Result:** pass with issues
+- **What happened:** Searches for "molecular dynamics", "MD simulation" and
+  "gromacs" returned 68, 102 and 91 workflows in one page each. Metadata,
+  `?version`, workflow-type and tag filters, RO-Crate download and TRS
+  worked. Signposting headers on workflow 248 version 7 gave DataCite XML,
+  Bioschemas JSON-LD and the RO-Crate link; `Accept` selected each
+  representation. No linkset is offered; `cite-as` appears only for versions with a minted DOI (624 v1 yes, 248 v7 no).
+- **Issues:** maturity not in the JSON; "MD simulation" pulls in unrelated
+  workflows; biobb tutorials appear as many near-duplicate variants; the
+  DataCite DOI for 248 v7 was not in the JSON API.
+
 ### 2026-10-14: Test 1 (Find, core case)
 
 - **Agent and route:** Claude Code desktop on macOS, public API (interim)
