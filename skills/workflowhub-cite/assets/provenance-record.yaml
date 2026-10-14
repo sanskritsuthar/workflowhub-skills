@@ -1,0 +1,31 @@
+# Workflow provenance for this project.
+# Maintained with the workflowhub-cite skill. Add new entries at the end;
+# edit past entries only to correct mistakes.
+
+entries:
+  - recorded_on: "<YYYY-MM-DD>"
+    status: "<planned | used>"
+    workflow:
+      id: <number>
+      title: "<title>"
+      url: "https://workflowhub.eu/workflows/<id>?version=<n>"
+      version: <number>
+      workflow_type: "<for example Galaxy>"
+      maturity: "<stable | work in progress | unknown>"
+      license: "<SPDX identifier or unknown>"
+      last_updated: "<YYYY-MM-DD or unknown>"
+      team: "<team name or unknown>"
+      doi: "<DOI from WorkflowHub, or none>"
+      creators: []
+    use:
+      purpose: "<what it was used for>"
+      run_on: "<platform or environment, or unknown>"
+      run_date: "<YYYY-MM-DD or unknown>"
+      engine_version: "<or unknown>"
+      parameters_changed: {}
+      reference_data: []
+      inputs: []
+      outputs: []
+    citation: "<citation text>"
+    tools_to_cite: []
+    notes: ""
