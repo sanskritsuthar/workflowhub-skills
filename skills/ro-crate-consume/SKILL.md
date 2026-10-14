@@ -3,7 +3,7 @@ name: ro-crate-consume
 description: "Retrieve and read an existing RO-Crate (Research Object Crate) from a permalink, DOI, repository URL, ZIP file or folder, and report what it contains: the root dataset, license, creators, main workflow or entry point, files, and any recorded runs or tests. Use this whenever a researcher or another skill needs the contents or metadata of an RO-Crate, for example a WorkflowHub workflow crate, a Workflow Run Crate, a dataset crate or a downloaded crate.zip, or asks what is inside one, even if they don't say 'RO-Crate' (for example 'what does this ro-crate-metadata.json say'). Read-only: it never modifies the crate and never writes crates; the crate is only read. Downloads are size-limited and rate-limited. To write or describe crates, use a crate-writing skill instead."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   status: draft
   maintainer: eScience Lab, University of Manchester
 ---
@@ -88,7 +88,9 @@ RO-Crate metadata document. Keep a note of what you tried.
 
 **Check what came back.** A response is the RO-Crate metadata only if it is a
 JSON-LD document with a root dataset (an entity with `@id` `./`, or the entity
-that the `ro-crate-metadata.json` entry says it is `about`) and conforms to an
+that the `ro-crate-metadata.json` entry says it is `about`; the root may be a
+URL, as in WorkflowHub workflow 1625, so follow `about` and don't assume `./`)
+and conforms to an
 RO-Crate version. Some servers ignore the `profile` parameter and return their
 own JSON-LD, for example DataCite or Bioschemas records. These describe the
 object, not the crate. Don't treat them as the crate; carry on to the next

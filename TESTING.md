@@ -110,6 +110,25 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-10-14: JSON API, RO-Crate and Bioschemas compared
+
+- **Agent and route:** Claude Code, public API; Bioschemas through
+  `Accept: application/ld+json` on workflows 42 and 1441
+- **Result:** pass with issues
+- **What happened:** The API, crate and Bioschemas record were compared field by
+  field for workflow 42, with 46, 123, 1441 and 1625 checked where noted.
+  WorkflowHub answered 503 ("queue full") and then 520 under load, then
+  recovered; this led to the pacing and backoff rules in `shared/tools.md`.
+- **Verified against WorkflowHub:** maturity is in the crate and Bioschemas
+  (`creativeWorkStatus`: Stable for 42 and 123, Work-in-progress for 46), not
+  in the JSON API, and absent for 1441 and 1625. The API has inputs, outputs
+  and steps (`internals`); the crate metadata has no steps. For 1625 the API
+  lists 1 input and 2 outputs while the crate declares none. The crate's
+  `sdDatePublished` equalled the request time. Bioschemas `contributor` was
+  the submitter (a bot for 1441). For 1441 the API and Bioschemas list no
+  creator, but the crate does.
+- **Issues:** the Bioschemas record was read for two workflows only.
+
 ### 2026-10-14: Climate search, crate metadata and `rocrate` in a virtual environment
 
 - **Agent and route:** Claude Code, public API plus HTTP headers; `rocrate`

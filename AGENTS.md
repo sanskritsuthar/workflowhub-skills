@@ -75,5 +75,13 @@ Skills fall into two groups:
   Bioschemas record, not the crate. The crate metadata is at
   `/workflows/<id>/ro_crate_metadata?version=<n>`.
 - Many crates declare no inputs, outputs or workflow profile.
+- Maturity is not in the JSON API; the crate and Bioschemas give it as
+  `creativeWorkStatus`, for generated crates only.
+- The JSON API does have inputs, outputs and steps (`internals`); the crate
+  metadata has no steps, and the API and crate can disagree on inputs and
+  outputs.
+- A crate's `sdDatePublished` is the time of the request, not a publication
+  date. Bioschemas `contributor` can be the submitter.
+- A crate's root dataset can be a URL (workflow 1625): follow `about`.
 
 Details are in `shared/tools.md` and the skills' `references/` folders.

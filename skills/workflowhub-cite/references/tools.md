@@ -80,6 +80,33 @@ curl -s -g -H "Accept: application/vnd.api+json" \
   "https://workflowhub.eu/workflows?filter[query]=nanopore%20assembly"
 ```
 
+## Where fields live (tested 2026-10-14, workflows 42, 46, 123, 1441, 1625)
+
+The JSON API, the crate and the Bioschemas record overlap but differ. Check
+the source that has what you need, for a known ID and version only.
+
+- **Maturity** isn't in the JSON API. The crate and Bioschemas give it as
+  `creativeWorkStatus` (Stable, Work-in-progress), but only for crates
+  WorkflowHub generated; 1441 and 1625 have none. Otherwise report it as
+  unknown.
+- **Bioschemas** (`Accept: application/ld+json` on `/workflows/<id>?version=<n>`)
+  is about 2 KB and gives maturity, inputs, outputs, people, team and
+  keywords. It is a lighter source than the crate for these. It has no
+  files, steps or profile claims for the crate. Pace it like any request.
+- **Steps** are in the JSON API (`internals.steps`), not in the crate
+  metadata.
+- **Dates:** the crate's `sdDatePublished` was the time of the request, not a
+  publication date. `datePublished` equalled the creation date. The API's
+  `updated_at` is the one the crate and Bioschemas `dateModified` follow;
+  `meta.modified` can differ.
+- **People:** the API gives IDs only. The crate and Bioschemas give names.
+  Bioschemas `contributor` can be the submitter (a bot for 1441), not an
+  author. For 1441 the API and Bioschemas list no creator, but the crate does,
+  with an ORCID.
+- **Inputs and outputs** can disagree. For 1625 the API lists 1 input and 2
+  outputs, and the crate declares none. When sources disagree, report both and
+  don't choose silently.
+
 ## Complement: FAIR Signposting on a single workflow
 
 WorkflowHub publishes
