@@ -3,7 +3,7 @@ name: workflowhub-cite
 description: "Produce correct citations and provenance records for WorkflowHub workflows that a researcher has used or plans to use: a formatted citation with DOI and version, a draft methods paragraph and availability statement, and a YAML provenance entry saved in the researcher's own project. Use this whenever a researcher asks how to cite, credit or acknowledge a WorkflowHub workflow, needs methods text or a data or software availability statement, wants to record which workflow and version they used, or is preparing a paper, thesis, report or reproducibility record, even if they don't say 'cite'. Reads WorkflowHub only; writes only to the researcher's project."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.0"
+  version: "0.1.3"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -43,6 +43,9 @@ undermines everything else you report.
   authors or licenses. Missing information is itself useful to the
   researcher.
 - **Spend context carefully.** Fetch only what the current step needs.
+- **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
+  one at a time, and back off with longer pauses if it returns errors or is
+  slow (see `references/tools.md`).
 - **Pause at decisions.** When the researcher needs to choose, present your
   findings and stop. If you are one of several agents, return your results
   to the agent that asked; it will bring the decision to the researcher.
@@ -74,6 +77,26 @@ version they intend to use and mark the record as planned.
 Read the title, creators in the order listed, owning team, version number and
 date, DOI if one exists, license, workflow type, source repository and any
 linked publication.
+
+The DataCite XML from the workflow's FAIR Signposting link (see
+`references/tools.md`) gives the creators, title and DOI in a standard form,
+and is a good second source for this step. Take creators from `creators` and
+`other_creators`, never from the submitter. A DOI in the DataCite XML counts
+only if a `cite-as` link, the JSON API or a DOI resolver confirms it; otherwise treat the DOI
+as unknown.
+
+Be careful with dates and people. A crate's `sdDatePublished` is when the crate
+was generated, not a publication date, and its `datePublished` may be the
+creation date, so say which date a citation uses. Bioschemas `contributor` can
+be the submitter, so don't take creators from it either.
+
+If the registry metadata and the DataCite XML leave a gap, for example a
+creator's ORCID, the license, or the tools the workflow lists, read the
+version's RO-Crate metadata with `ro-crate-consume`, starting from the
+signposting links found with `fair-signposting`. This needs the workflow ID and
+version from step 1. Use the metadata-only request, for this one workflow, and
+don't download the ZIP. Where the sources disagree, say so and use the
+WorkflowHub metadata for the citation.
 
 ### 3. Compose the citation
 

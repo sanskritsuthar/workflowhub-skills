@@ -9,7 +9,11 @@ How to test the skills, what to look for, and a log of results.
    such as provenance files don't land among the skill files.
 2. Start a fresh session for each test, unless the test says to continue.
    Leftover context hides gaps in the instructions.
-3. Optional: compare with the skills turned off. In Claude Code, type
+3. Repeat the core tests (1, 2, 5, 9) in at least one non-Claude agent, such
+   as OpenAI Codex (install under `.agents/skills`; see the README). Record
+   the agent in each log entry, and whether network access for curl needed
+   approval or was blocked.
+4. Optional: compare with the skills turned off. In Claude Code, type
    `/skills`, highlight a skill and press Space to cycle it to "off", then
    repeat the prompt in a fresh session.
 
@@ -34,6 +38,43 @@ How to test the skills, what to look for, and a log of results.
    project."
 7. **Read-only boundary.** "Find a Snakemake workflow for variant calling,
    then upload my improved version of it to WorkflowHub."
+8. **Find, molecular dynamics.** "Is there an existing workflow for
+   molecular dynamics simulation of a protein with GROMACS? I can use
+   Galaxy or Python." Check that biobb tutorial variants are grouped, and
+   that unrelated "MD" hits are dropped.
+9. **Inspect, Run Crate (workflow 1326).** "Inspect WorkflowHub workflow 1326:
+   what is in its RO-Crate, which profiles does it conform to, and has it
+   been run before?" Expected: Workflow RO-Crate 1.0 and the Process,
+   Workflow and Provenance Run Crate 0.5 profiles declared on the root;
+   about 29 recorded runs; a COMPSs lysozyme-in-water workflow whose main
+   entity is a Python file; no download of the ZIP.
+10. **Inspect, size and rate limits (workflow 1326 and others).** "Inspect
+    workflows 1326, 401, 1201 and 248 and tell me which are Run Crates."
+    Check that crates are read one at a time with at least 2 seconds between
+    requests, via the metadata route, and that no ZIP is downloaded.
+11. **Inspect, declared versus observed.** "Does workflow 248 conform to
+    Workflow RO-Crate? Does it have tests?" Expected: no workflow profile
+    declared, but the structure matches; a Planemo test suite on GitHub
+    Actions; the agent doesn't query the test service.
+12. **Inspect, no declared inputs.** "What inputs does workflow 401 declare
+    in its crate?" Expected: "not declared", not "none", and a pointer to the
+    workflow file.
+13. **Explain a Run Crate (workflow 1326).** "Walk me through workflow 1326
+    and tell me what parameters I should change." Check that values from the
+    recorded run are called an example of one past run, not defaults, and
+    that the ZIP is downloaded only if needed, once, within the limit.
+14. **Signposting directly.** "Does https://workflowhub.eu/workflows/248?version=7
+    support FAIR Signposting? Is there a DOI I can cite?" Expected: Level 1
+    headers with `describedby` and `item`; no `cite-as`, no linkset; the
+    DOI shown in the DataCite XML returns 404 at doi.org, so the agent says
+    there's no citable DOI. Repeat with version 1 of workflow 624, which has
+    a `cite-as` link.
+15. **Content negotiation trap.** "Get the RO-Crate metadata for workflow 248
+    version 7 using content negotiation." Expected: the agent notices the
+    response is Bioschemas, not an RO-Crate, and uses the metadata route.
+16. **Large crate.** "Download the full crate for workflow [ID of a crate over
+    20 MiB]." Expected: the agent checks the size with HEAD and asks before
+    downloading. (Pick a large crate when testing; none is recorded here.)
 
 ## What to check
 
@@ -49,6 +90,11 @@ How to test the skills, what to look for, and a log of results.
 - **Format.** Did it follow the template, at a sensible length?
 - **Decisions.** Did it pause for the researcher at decision points?
 - **Boundary.** For test 7, did it search but decline the upload?
+- **Limits.** For tests 9 to 13 and 16, did it check size first, fetch one
+  crate at a time with at least 2 seconds between requests, and avoid
+  repeat downloads?
+- **Declared versus observed.** For tests 9 to 12, does the report separate
+  what the crate claims from what the agent saw?
 
 ## Results log
 
@@ -63,6 +109,75 @@ Add an entry for each test run, newest first.
 - **What happened:**
 - **Verified against WorkflowHub:**
 - **Issues:**
+
+### 2026-10-14: Inspect workflow 123 version 1
+
+- **Agent and route:** Claude Code, public API, Bioschemas and a saved crate
+  read with `rocrate` 0.16.0
+- **Result:** pass with issues
+- **What happened:** Signposting gave DataCite XML, Bioschemas and the crate
+  ZIP (7,893 bytes), with no `cite-as`. The crate (RO-Crate 1.3, Workflow
+  RO-Crate 1.0 declared) has 1 input, 5 outputs, no steps, tests or runs. All
+  requests returned 200 with the 0.5 s pacing.
+- **Verified against WorkflowHub:** maturity Stable in the crate and
+  Bioschemas, not in the API. The API holds a 195-character input description
+  and 12 steps that the crate lacks. The crates for 46 and 123 list only a
+  `contributor` (person 49) and no creator; 42 has a creator and a contributor;
+  1441 has an `author` with an ORCID.
+- **Issues:** an earlier summary called the contributor of 46 and 123 a
+  creator. The skill and template now separate creators from contributors, and
+  the template has rows for maturity and Bioschemas.
+
+### 2026-10-14: JSON API, RO-Crate and Bioschemas compared
+
+- **Agent and route:** Claude Code, public API; Bioschemas through
+  `Accept: application/ld+json` on workflows 42 and 1441
+- **Result:** pass with issues
+- **What happened:** The API, crate and Bioschemas record were compared field by
+  field for workflow 42, with 46, 123, 1441 and 1625 checked where noted.
+  WorkflowHub answered 503 ("queue full") and then 520 under load, then
+  recovered; this led to the pacing and backoff rules in `shared/tools.md`.
+- **Verified against WorkflowHub:** maturity is in the crate and Bioschemas
+  (`creativeWorkStatus`: Stable for 42 and 123, Work-in-progress for 46), not
+  in the JSON API, and absent for 1441 and 1625. The API has inputs, outputs
+  and steps (`internals`); the crate metadata has no steps. For 1625 the API
+  lists 1 input and 2 outputs while the crate declares none. The crate's
+  `sdDatePublished` equalled the request time. Bioschemas `contributor` was
+  the submitter (a bot for 1441). For 1441 the API and Bioschemas list no
+  creator, but the crate does.
+- **Issues:** the Bioschemas record was read for two workflows only.
+
+### 2026-10-14: Climate search, crate metadata and `rocrate` in a virtual environment
+
+- **Agent and route:** Claude Code, public API plus HTTP headers; `rocrate`
+  0.16.0 in a virtual environment in the scratch folder
+- **Result:** pass with issues
+- **What happened:** A search for "climate" found 22 workflows. The metadata
+  of five (IDs 42, 46, 123, 1441, 1625, all version 1) came from
+  `/workflows/<id>/ro_crate_metadata?version=1`, one at a time, 2 seconds
+  apart, 2.8 to 6.9 KB each, all 200 `application/json`. `ROCrate(folder)`
+  loaded all five from a folder holding only `ro-crate-metadata.json`.
+- **Verified against WorkflowHub:** the metadata route works for all five, not
+  only workflow 248. Crates for 42, 46 and 123 declare Workflow RO-Crate 1.0
+  on RO-Crate 1.3; 1441 and 1625 declare RO-Crate 1.1 and no workflow profile.
+  Only 123 declares both inputs and outputs. None has tests or recorded runs.
+- **Issues:** the root dataset of crate 1625 is a URL given by the descriptor's
+  `about`, not `./`, so a reader must follow `about`. The API listed no
+  creators for 1441, but its crate names one with an ORCID.
+
+### 2026-10-14: Molecular dynamics search and FAIR Signposting check
+
+- **Agent and route:** Claude Code, public API plus HTTP `Link` headers
+- **Result:** pass with issues
+- **What happened:** Searches for "molecular dynamics", "MD simulation" and
+  "gromacs" returned 68, 102 and 91 workflows in one page each. Metadata,
+  `?version`, workflow-type and tag filters, RO-Crate download and TRS
+  worked. Signposting headers on workflow 248 version 7 gave DataCite XML,
+  Bioschemas JSON-LD and the RO-Crate link; `Accept` selected each
+  representation. No linkset is offered; `cite-as` appears only for versions with a minted DOI (624 v1 yes, 248 v7 no).
+- **Issues:** maturity not in the JSON; "MD simulation" pulls in unrelated
+  workflows; biobb tutorials appear as many near-duplicate variants; the
+  DataCite DOI for 248 v7 was not in the JSON API.
 
 ### 2026-10-14: Test 1 (Find, core case)
 

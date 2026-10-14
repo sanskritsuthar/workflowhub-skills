@@ -5,40 +5,24 @@ workflow files plus `ro-crate-metadata.json`, a JSON-LD file describing them.
 Read the metadata file first; it is usually small and tells you where
 everything is.
 
-## Structure
+## Reading the crate
 
-The metadata file has an `@graph` list of entities, each with an `@id`.
-Useful entities:
+Retrieve and read the crate with `workflowhub-inspect` (and the
+`ro-crate-consume` skill behind it), not by hand: they use the `rocrate`
+library, find the root dataset properly, and apply the size and rate limits.
+Their reports tell you where things are:
 
-- **The root dataset** (`"@id": "./"`): the crate's name, description and
-  license. Its `mainEntity` points to the main workflow file.
-- **The main workflow** (the entity `mainEntity` points to): typically has
-  types including `File`, `SoftwareSourceCode` and `ComputationalWorkflow`.
-  Look for:
-  - `programmingLanguage`: points to an entity naming the workflow system,
-    such as Galaxy, CWL, Nextflow or Snakemake.
-  - `input` and `output`: point to `FormalParameter` entities with a name,
-    description, format and whether a value is required.
-  - `creator`, `version`, `license`, `url`.
-  - `image`: a diagram of the workflow, if one was provided.
-  - `subjectOf`: sometimes an abstract CWL description of the workflow.
-- **Other files** listed in the root's `hasPart`, such as a README, test
-  definitions, configuration files or test data.
+- the **main workflow** (`mainEntity`) and its language
+  (`programmingLanguage`); the main entity can be a `.ga`, `.cwl`, a Nextflow
+  `main.nf` or `nextflow.config`, a Snakefile, a notebook or a script;
+- declared **inputs and outputs** (`FormalParameter` entities), if any;
+- declared **steps** (`HowToStep`), a **diagram** (`image`) and a **CWL
+  description** (`subjectOf`), if any;
+- other files: a README, test definitions, configuration and test data;
+- **recorded runs** (`CreateAction`), for Run Crates.
 
-A minimal example:
-
-```json
-{
-  "@graph": [
-    { "@id": "./", "@type": "Dataset",
-      "mainEntity": { "@id": "workflow.ga" } },
-    { "@id": "workflow.ga",
-      "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
-      "programmingLanguage": { "@id": "#galaxy" },
-      "input": [{ "@id": "#input-reads" }] }
-  ]
-}
-```
+Each of these is optional. Many valid crates declare no inputs, outputs or
+steps. Don't treat that as an error.
 
 ## Tips
 
@@ -50,6 +34,8 @@ A minimal example:
   inputs and intended use there more clearly than anywhere else.
 - Test definitions and test data are a good sign for reuse. Note them in the
   explanation, because they give the researcher a safe first run.
+- The root dataset's `@id` is usually `./` but can be an absolute URL. Find it
+  through the metadata file's `about`.
 - If there is no metadata file, or it lacks `mainEntity`, look for the file
   whose extension matches the workflow type (such as `.ga`, `.cwl`,
   `main.nf` or `Snakefile`).

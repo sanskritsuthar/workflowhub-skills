@@ -3,7 +3,7 @@ name: workflowhub-find
 description: "Find existing computational workflows on WorkflowHub (workflowhub.eu) that match a research need, and return a short, justified shortlist. Use this whenever a researcher asks whether a workflow or pipeline already exists for an analysis, wants Galaxy, Nextflow, Snakemake, CWL, KNIME or other workflows for a task (for example sequence analysis, image processing, biodiversity modelling or environmental data processing), mentions WorkflowHub, or is about to build an analysis pipeline that could reuse an existing one, even if they don't name WorkflowHub. Read-only: never submits, edits or deletes anything. To judge or compare workflows that have already been identified, use workflowhub-evaluate instead."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.0"
+  version: "0.1.3"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -44,6 +44,9 @@ undermines everything else you report.
   authors or licenses. Missing information is itself useful to the
   researcher.
 - **Spend context carefully.** Fetch only what the current step needs.
+- **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
+  one at a time, and back off with longer pauses if it returns errors or is
+  slow (see `references/tools.md`).
 - **Pause at decisions.** When the researcher needs to choose, present your
   findings and stop. If you are one of several agents, return your results
   to the agent that asked; it will bring the decision to the researcher.
@@ -99,8 +102,20 @@ promising candidates. Read the metadata for those only: description, workflow
 type, maturity, license, latest version, date of last update, and owning
 team. Don't download workflow files at this stage.
 
+If the listing metadata can't settle something that decides the ranking, such
+as whether a candidate declares inputs and outputs, you may read the RO-Crate
+metadata of the top one or two candidates with `fair-signposting` and
+`ro-crate-consume`. Only do this for IDs that the search has already returned,
+never to search, and never for the whole result set or the whole shortlist. Use
+the metadata-only request, one crate at a time, at least 2 seconds apart, and
+leave the ZIP alone. Otherwise record the point as "unknown" and offer
+`workflowhub-inspect` for the workflows the researcher chooses.
+
 Signals worth noting, without treating any single one as decisive:
 
+- Maturity isn't in the JSON API. If you need it, the Bioschemas record or the
+  crate gives it as `creativeWorkStatus` (see `references/tools.md`); otherwise
+  record "unknown".
 - Stable maturity, recent updates and several versions suggest active
   maintenance.
 - Workflows from curated community teams usually come with review and

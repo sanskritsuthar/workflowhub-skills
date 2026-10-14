@@ -3,7 +3,7 @@ name: workflowhub-explain
 description: "Explain what a specific WorkflowHub workflow does, step by step: its inputs, processing steps, tools, key parameters, outputs and what it needs to run, and map its inputs to the researcher's own data. Use this whenever a researcher asks what a WorkflowHub workflow does, wants a walkthrough, asks what inputs or reference data it needs, whether their files will work with it, what they would need to install or provide, or how a Galaxy, Nextflow, Snakemake, CWL or other workflow from WorkflowHub is structured, even if they don't say 'explain'. Read-only and never runs the workflow. To search for workflows, use workflowhub-find; to judge quality or compare workflows, use workflowhub-evaluate."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.0"
+  version: "0.1.3"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -48,6 +48,9 @@ undermines everything else you report.
   authors or licenses. Missing information is itself useful to the
   researcher.
 - **Spend context carefully.** Fetch only what the current step needs.
+- **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
+  one at a time, and back off with longer pauses if it returns errors or is
+  slow (see `references/tools.md`).
 - **Pause at decisions.** When the researcher needs to choose, present your
   findings and stop. If you are one of several agents, return your results
   to the agent that asked; it will bring the decision to the researcher.
@@ -56,6 +59,13 @@ This skill adds one more rule: **explain, don't run.** Don't execute the
 workflow or any code inside it. Running a workflow uses compute, may need
 credentials or large reference data, and means executing code written by
 someone else. That decision belongs to the researcher, as a separate step.
+
+## Related skills
+
+- `workflowhub-inspect`: the crate-level view (profiles, declared inputs and
+  outputs, tests, recorded runs). Step 3 builds on it.
+- `ro-crate-consume` and `fair-signposting`: used by `workflowhub-inspect` to
+  retrieve and read the crate. They set the download limits that apply here.
 
 ## Procedure
 
@@ -68,22 +78,38 @@ because steps and parameters can change between versions.
 
 ### 2. Read the metadata
 
-Read the workflow's metadata: workflow type, description, declared inputs and
-outputs, license, and links to source repositories or documentation. This
-tells you which guide to use and gives you the author's own summary to check
-your reading against.
+Read the workflow's metadata from WorkflowHub: workflow type, description,
+license, and links to source repositories or documentation. This tells you
+which guide to use and gives you the author's own summary to check your
+reading against. Declared inputs, outputs and steps are not in this metadata;
+they are in the RO-Crate (step 3).
 
 ### 3. Get the content
 
-Download the workflow's content. It normally arrives as an RO-Crate: read
-`references/ro-crate.md` and start with the crate's metadata file. It tells
-you which file is the main workflow, which language it is written in, what
-inputs and outputs are declared, and whether a README or tests are included.
+Use `workflowhub-inspect` for the crate-level view. It reads the workflow's
+FAIR Signposting links and RO-Crate metadata (through `fair-signposting` and
+`ro-crate-consume`) and reports the main workflow and its language, any
+declared inputs, outputs and steps, tests, and recorded runs. If an earlier
+inspection record exists for this version, use it instead of fetching again.
+This needs a WorkflowHub ID and version from step 1. Don't use it to search,
+and read the metadata of one workflow at a time, never of a whole result set.
 
-Then read the main workflow file. For large files, read selectively (the
-input definitions, the list of steps, the output definitions) rather than
-loading everything at once. Read other files only when the explanation needs
-them.
+Then read the main workflow file. This needs the crate's ZIP, which is
+expensive for both server and client, so:
+
+- check the size first and stay within the limit in `ro-crate-consume` (ask
+  the researcher above it);
+- download one crate at a time, with at least 2 seconds between crate
+  requests, and never download the same crate twice;
+- extract only the files you need: normally the main workflow file, the README
+  and the test definition;
+- when asked to explain several workflows, explain one at a time and don't
+  fetch ahead.
+
+Read large files selectively (the input definitions, the list of steps, the
+output definitions) rather than loading everything at once. Read other files
+only when the explanation needs them. `references/ro-crate.md` has tips for
+finding things in a crate.
 
 Some workflows are registered as links to an external repository rather than
 as uploaded files. In that case, say so, give the link, and explain from the
@@ -122,6 +148,13 @@ Mark anything you inferred rather than read directly, for example
 "(inferred from the step name)". Report tool versions only as written in the
 workflow.
 
+If the crate is a Run Crate (it records earlier runs), the recorded run shows
+real parameter values, the software and versions used, and the kinds of
+inputs and outputs. Use it as an example of one past run, say so, and don't
+present those values as defaults or as a promise that the workflow will work
+on the researcher's data. If the crate declares no inputs or outputs, say
+"not declared" and take them from the workflow file.
+
 ### 6. Map to the researcher's data
 
 If the researcher has described or shared their data, match each workflow
@@ -135,6 +168,8 @@ names, formats and headers; there's no need to read large data files in full.
 Use `assets/explanation-template.md`. If the environment can render diagrams,
 a simple diagram of the stages helps; otherwise a numbered list is fine.
 
-Then pause. Natural next steps are recording and citing the workflow
+Say which crate layers the explanation used (for example "Workflow RO-Crate
+with a recorded run") and what you did not check. Then pause. Natural next
+steps are recording and citing the workflow
 (workflowhub-cite), or going back to workflowhub-evaluate if the walkthrough
 revealed problems, such as a required reference the researcher doesn't have.

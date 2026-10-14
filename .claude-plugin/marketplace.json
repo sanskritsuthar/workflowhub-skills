@@ -1,0 +1,14 @@
+{
+  "name": "workflowhub-skills",
+  "description": "Agent skills for WorkflowHub",
+  "owner": {
+    "name": "eScience Lab, The University of Manchester"
+  },
+  "plugins": [
+    {
+      "name": "workflowhub",
+      "source": "./",
+      "description": "Find, evaluate, inspect, explain and cite WorkflowHub workflows; read FAIR Signposting and RO-Crates."
+    }
+  ]
+}
