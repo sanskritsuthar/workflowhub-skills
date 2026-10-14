@@ -3,7 +3,7 @@ name: workflowhub-evaluate
 description: "Assess whether specific WorkflowHub workflows are trustworthy and fit a researcher's data and purpose, or compare several side by side, and give an evidence-based verdict. Use this whenever a researcher has particular workflows in mind (WorkflowHub IDs, URLs, names, or a shortlist from workflowhub-find) and asks things like 'is this any good', 'which one should I use', 'will this work with my data', 'is it maintained', 'can I reuse it' or 'compare these', even if they don't say 'evaluate'. Read-only. To search for candidates, use workflowhub-find; for a step-by-step walkthrough of what a workflow does, use workflowhub-explain."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -81,9 +81,23 @@ license, version history with dates, creators and team, DOI, tags and topic
 annotations, declared inputs and outputs, and links to source repositories,
 documentation or publications.
 
+If a criterion depends on something the registry metadata lacks, such as
+declared inputs and outputs, tests, recorded runs, a confirmed DOI or the
+authors' ORCIDs, read it from the workflow's FAIR Signposting links and
+RO-Crate with `fair-signposting` and `ro-crate-consume`. For a full crate-level
+view, use `workflowhub-inspect`. Rules for this:
+
+- Start from a WorkflowHub ID and version already identified in step 1. Never
+  use these skills to search, and never fetch crates for every workflow on a
+  shortlist or in a search result.
+- Fetch the metadata-only request, not the ZIP. One crate at a time, at least
+  2 seconds apart, no repeat downloads. If more than about five crates would
+  be needed, tell the researcher how many and ask first.
+- Reuse an earlier inspection record for the same version if one exists.
+
 Look at the workflow's files only if a decision depends on something the
-metadata lacks, such as whether it accepts a particular input format, and
-then read only the part you need. A full walkthrough is the job of
+metadata and crate metadata lack, such as whether it accepts a particular input
+format, and then read only the part you need. A full walkthrough is the job of
 workflowhub-explain.
 
 ### 3. Assess against the criteria

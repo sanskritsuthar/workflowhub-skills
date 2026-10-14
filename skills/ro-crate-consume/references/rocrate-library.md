@@ -1,6 +1,6 @@
 # Reading a crate with the `rocrate` library
 
-PyPI: <https://pypi.org/project/rocrate/> (tested with version 0.16.0). It
+PyPI: <https://pypi.org/project/rocrate/> (tested with version 0.16.0, installed with `pip` into a virtual environment; loaded five WorkflowHub crates from metadata-only folders). It
 reads and writes RO-Crates and handles the JSON-LD for you. This skill only
 reads.
 

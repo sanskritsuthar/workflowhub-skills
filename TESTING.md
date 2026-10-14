@@ -110,6 +110,24 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-10-14: Climate search, crate metadata and `rocrate` in a virtual environment
+
+- **Agent and route:** Claude Code, public API plus HTTP headers; `rocrate`
+  0.16.0 in a virtual environment in the scratch folder
+- **Result:** pass with issues
+- **What happened:** A search for "climate" found 22 workflows. The metadata
+  of five (IDs 42, 46, 123, 1441, 1625, all version 1) came from
+  `/workflows/<id>/ro_crate_metadata?version=1`, one at a time, 2 seconds
+  apart, 2.8 to 6.9 KB each, all 200 `application/json`. `ROCrate(folder)`
+  loaded all five from a folder holding only `ro-crate-metadata.json`.
+- **Verified against WorkflowHub:** the metadata route works for all five, not
+  only workflow 248. Crates for 42, 46 and 123 declare Workflow RO-Crate 1.0
+  on RO-Crate 1.3; 1441 and 1625 declare RO-Crate 1.1 and no workflow profile.
+  Only 123 declares both inputs and outputs. None has tests or recorded runs.
+- **Issues:** the root dataset of crate 1625 is a URL given by the descriptor's
+  `about`, not `./`, so a reader must follow `about`. The API listed no
+  creators for 1441, but its crate names one with an ORCID.
+
 ### 2026-10-14: Molecular dynamics search and FAIR Signposting check
 
 - **Agent and route:** Claude Code, public API plus HTTP `Link` headers
