@@ -117,12 +117,12 @@ Each skill folder contains:
 
 ### Install in Claude Code
 
-Copy the folders from `skills/` into a project's `.claude/skills/`
+Copy all folders from `skills/` into a project's `.claude/skills/`
 folder. From the root of this repository:
 
 ```bash
 mkdir -p /path/to/your-project/.claude/skills
-cp -R skills/workflowhub-* /path/to/your-project/.claude/skills/
+cp -R skills/* /path/to/your-project/.claude/skills/
 ```
 
 To use them in every project instead, copy them to `~/.claude/skills/`.
@@ -203,7 +203,7 @@ The skills never scrape web pages or answer from memory.
   every skill:
 
 ```bash
-  for s in skills/*/; do cp shared/tools.md "${s}references/tools.md"; done
+  for s in skills/workflowhub-*/; do cp shared/tools.md "${s}references/tools.md"; done
 ```
 
 - **Use only the six frontmatter fields from the Agent Skills
