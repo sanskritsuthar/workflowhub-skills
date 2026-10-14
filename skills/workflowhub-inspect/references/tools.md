@@ -51,6 +51,17 @@ no `links.next`.
 
 Notes:
 
+- **Pace your requests.** Wait at least 0.5 seconds between any two requests
+  to workflowhub.eu (`sleep 0.5`): searches, metadata, signposting headers and
+  the TRS API alike. Send them one after another, never in parallel. This is
+  on top of the 2-second pause between crate requests below.
+- **Back off when it struggles.** If the server answers 429, 503 or 520, or
+  takes more than about 10 seconds, double the pause before each retry (1, 2,
+  4, 8, 16 seconds, then 32), and keep the longer pause for the following
+  requests too. If a `Retry-After` header is sent, wait at least that long.
+  After about five retries, stop and tell the researcher that WorkflowHub is
+  overloaded, with the status code, instead of trying further. Return to 0.5
+  seconds only after several successful requests in a row.
 - To read an RO-Crate, prefer the metadata request above to the ZIP, and use
   the `ro-crate-consume` skill, which sets a size limit and a pause of at
   least 2 seconds between crate requests. `Accept:

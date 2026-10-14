@@ -3,7 +3,7 @@ name: workflowhub-find
 description: "Find existing computational workflows on WorkflowHub (workflowhub.eu) that match a research need, and return a short, justified shortlist. Use this whenever a researcher asks whether a workflow or pipeline already exists for an analysis, wants Galaxy, Nextflow, Snakemake, CWL, KNIME or other workflows for a task (for example sequence analysis, image processing, biodiversity modelling or environmental data processing), mentions WorkflowHub, or is about to build an analysis pipeline that could reuse an existing one, even if they don't name WorkflowHub. Read-only: never submits, edits or deletes anything. To judge or compare workflows that have already been identified, use workflowhub-evaluate instead."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -44,6 +44,9 @@ undermines everything else you report.
   authors or licenses. Missing information is itself useful to the
   researcher.
 - **Spend context carefully.** Fetch only what the current step needs.
+- **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
+  one at a time, and back off with longer pauses if it returns errors or is
+  slow (see `references/tools.md`).
 - **Pause at decisions.** When the researcher needs to choose, present your
   findings and stop. If you are one of several agents, return your results
   to the agent that asked; it will bring the decision to the researcher.
