@@ -1,8 +1,13 @@
 # WorkflowHub skills for AI agents
 
 Agent skills that help researchers use [WorkflowHub](https://workflowhub.eu)
-through AI agents: finding workflows, judging whether they fit, understanding
-what they do, and citing them correctly.
+through AI agents: finding workflows, judging whether they fit, inspecting
+what is in them, understanding what they do, and citing them correctly. It
+also holds two generic skills the others rely on, for reading FAIR
+Signposting links and RO-Crates.
+
+**For agents and contributors:** read [AGENTS.md](AGENTS.md) first. It
+explains what these skills are for and the rules for changing them.
 
 > **Status: draft for team discussion.** These skills only read from
 > WorkflowHub. The WorkflowHub MCP server they are designed to use is not
@@ -64,15 +69,34 @@ the researcher's own project, and only with the researcher's agreement.
 1. **Find** candidate workflows for an analysis (`workflowhub-find`).
 2. **Evaluate** whether they are trustworthy and fit the data
    (`workflowhub-evaluate`).
-3. **Explain** what the chosen workflow does and what it needs
+3. **Inspect** what is inside a candidate's RO-Crate: profiles, declared
+   inputs and outputs, tests, recorded runs (`workflowhub-inspect`).
+4. **Explain** what the chosen workflow does and what it needs
    (`workflowhub-explain`).
-4. **Reuse** it in the researcher's environment (`workflowhub-reuse`,
+5. **Reuse** it in the researcher's environment (`workflowhub-reuse`,
    outline only).
-5. **Cite and record** what was used (`workflowhub-cite`).
+6. **Cite and record** what was used (`workflowhub-cite`).
 
 Two activities recur over time: checking for updates
 (`workflowhub-track-updates`) and surveying a whole topic
 (`workflowhub-survey`). Both are outline only.
+
+`workflowhub-inspect` and `workflowhub-cite` use the two generic skills,
+which work with any repository that supports the standards and have no
+WorkflowHub-specific content:
+
+```mermaid
+flowchart LR
+    inspect[workflowhub-inspect] --> sp[fair-signposting]
+    inspect --> rc[ro-crate-consume]
+    rc --> sp
+    explain[workflowhub-explain] --> inspect
+    cite[workflowhub-cite] -.->|DOI and creators| sp
+```
+
+Everything that downloads RO-Crate ZIP files follows the limits in
+`ro-crate-consume`: check the size first, ask above 20 MiB, one crate at a
+time, at least 2 seconds between crate requests.
 
 Each skill can produce a structured **handoff record**, defined in its
 `assets/` template. All records share the same `workflow` fields, so one
@@ -85,14 +109,18 @@ helper agents, and the skills themselves don't change.
 ```
 workflowhub-skills/
 ├── README.md             This file
+├── AGENTS.md             Purpose and rules for agents working on the repo
 ├── TESTING.md            Test prompts, what to check, and results
 ├── shared/
 │   └── tools.md          Master copy of how skills reach WorkflowHub
 ├── skills/               Complete skills: install these
 │   ├── workflowhub-find/
 │   ├── workflowhub-evaluate/
+│   ├── workflowhub-inspect/
 │   ├── workflowhub-explain/
-│   └── workflowhub-cite/
+│   ├── workflowhub-cite/
+│   ├── fair-signposting/        Generic, not WorkflowHub-specific
+│   └── ro-crate-consume/        Generic, not WorkflowHub-specific
 └── drafts/               Outline skills: don't install yet
     ├── workflowhub-reuse/
     ├── workflowhub-track-updates/
@@ -199,8 +227,10 @@ The skills never scrape web pages or answer from memory.
 
 ## Maintaining the skills
 
-- **`shared/tools.md` is the master copy.** After editing it, copy it into
-  every skill:
+- **`shared/tools.md` is the master copy** for the WorkflowHub skills. The
+  generic skills (`fair-signposting`, `ro-crate-consume`) keep their own
+  `references/tools.md` and must not be overwritten. After editing the
+  master, copy it into every WorkflowHub skill:
 
 ```bash
   for s in skills/workflowhub-*/; do cp shared/tools.md "${s}references/tools.md"; done
@@ -233,8 +263,8 @@ Found in the first test (details in [TESTING.md](TESTING.md)):
   the evaluation criteria.
 - **Submitters can be bots.** Planned fix: tell `workflowhub-cite` to use
   the creators, never the submitter.
-- **Workflow-type filter.** It works through the API, but the exact
-  parameter name still needs recording in `tools.md`.
+- **Workflow-type filter.** Resolved: `filter[workflow_type]=<key>` works
+  (keys such as `galaxy`, `nextflow`). Other keys are still to verify.
 
 
 ## License
