@@ -110,6 +110,24 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-10-14: Inspect workflow 123 version 1
+
+- **Agent and route:** Claude Code, public API, Bioschemas and a saved crate
+  read with `rocrate` 0.16.0
+- **Result:** pass with issues
+- **What happened:** Signposting gave DataCite XML, Bioschemas and the crate
+  ZIP (7,893 bytes), with no `cite-as`. The crate (RO-Crate 1.3, Workflow
+  RO-Crate 1.0 declared) has 1 input, 5 outputs, no steps, tests or runs. All
+  requests returned 200 with the 0.5 s pacing.
+- **Verified against WorkflowHub:** maturity Stable in the crate and
+  Bioschemas, not in the API. The API holds a 195-character input description
+  and 12 steps that the crate lacks. The crates for 46 and 123 list only a
+  `contributor` (person 49) and no creator; 42 has a creator and a contributor;
+  1441 has an `author` with an ORCID.
+- **Issues:** an earlier summary called the contributor of 46 and 123 a
+  creator. The skill and template now separate creators from contributors, and
+  the template has rows for maturity and Bioschemas.
+
 ### 2026-10-14: JSON API, RO-Crate and Bioschemas compared
 
 - **Agent and route:** Claude Code, public API; Bioschemas through

@@ -3,7 +3,7 @@ name: workflowhub-inspect
 description: "Inspect a specific WorkflowHub workflow version in depth by reading its FAIR Signposting links and its RO-Crate: which profiles the crate conforms to (Workflow RO-Crate, Workflow Testing, Process, Workflow and Provenance Run Crate, and others), the main workflow and its language, declared inputs and outputs, steps, diagram, tests, recorded runs, and any extra information beyond the profile. Use this whenever a researcher or another skill wants to look inside a WorkflowHub workflow beyond its listing page: 'what is in the crate', 'does it have tests', 'has it been run before', 'what inputs does it declare', 'is this a workflow run crate', or before choosing a workflow to reuse. Read-only on WorkflowHub; downloads are size-limited and rate-limited. For the step-by-step meaning of the workflow itself use workflowhub-explain; for judging fit use workflowhub-evaluate."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
   status: draft
   maintainer: eScience Lab, University of Manchester
 ---
@@ -40,8 +40,12 @@ reach WorkflowHub.
   source and don't pick one silently.
 - **Declared is not verified.** A `conformsTo` claim, a test suite or a recorded
   run is what the authors say. Report it as such.
+- **Creator is not contributor.** Report `creator`, `author` and `contributor`
+  separately. A WorkflowHub crate may list only a `contributor`, who can be the
+  submitter. Never present a contributor as a creator.
 - **Be cheap.** Prefer the metadata file over the ZIP. One crate at a time,
-  at least 2 seconds between crate requests. When inspecting several
+  at least 2 seconds between crate requests. Reuse a copy of the crate already
+  saved in this session instead of fetching it again. When inspecting several
   workflows, read metadata only, and download a ZIP for at most the one or two
   the researcher chose.
 - **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
@@ -102,8 +106,12 @@ present, collect what `references/profiles.md` lists:
 
 ### 6. Cross-check
 
-Compare the crate with the WorkflowHub metadata: title, license, creators,
-version. Report any difference. Don't decide which is right.
+Compare the crate with the WorkflowHub metadata and the Bioschemas record
+(`Accept: application/ld+json` on the workflow page, one more request): title,
+license, creators and contributors, version, dates, maturity, inputs, outputs
+and steps. Report any difference with its source. Don't decide which is right.
+Crate titles may carry a prefix such as "Research Object Crate for", and a
+crate's `sdDatePublished` is the time it was generated.
 
 ### 7. Go deeper only if needed
 

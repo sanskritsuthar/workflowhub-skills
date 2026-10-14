@@ -4,11 +4,13 @@
 **WorkflowHub metadata:** license <license>, team <team>, latest version
 <n>, version date <date>
 **Citable identifier:** <DOI from `cite-as`, or "none minted">
+**Maturity:** <`creativeWorkStatus` from the crate or Bioschemas, or "unknown">
 
 ## How it was read
 
 - Signposting: <links found: cite-as, describedby types, item>
 - Crate retrieved by: <metadata route / ZIP>, <size>, RO-Crate version <v>
+- Bioschemas record read: <yes / no>
 - Not checked: <for example "workflow file not downloaded", "test service
   not queried", "ZIP contents not compared with metadata">
 
@@ -33,16 +35,22 @@
 - **Tests:** <suites, definition, engine, service, or none>
 - **Recorded runs:** <N, what and where it ran, when, software and version,
   inputs and outputs, or none>
-- **Creators:** <names with identifiers>
+- **Creators / authors:** <names with identifiers, or "none declared">
+- **Contributors:** <names with identifiers, or "none declared"; say if one
+  is the submitter>
 
 ## Beyond the profile
 
 <entity types not covered above, with counts and anything relevant, or
 "nothing further">
 
-## Differences from the WorkflowHub listing
+## Differences between sources
 
-<title, license, creators or version that differ, or "none found">
+| Item | WorkflowHub API | Crate | Bioschemas |
+|---|---|---|---|
+| <title, license, creators, contributors, version, dates, maturity, inputs, outputs, steps: only the rows that differ> | <value> | <value> | <value or "not read"> |
+
+<"none found" if nothing differs>
 
 ## Suggested next step
 
