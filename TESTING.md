@@ -41,7 +41,7 @@ How to test the skills, what to look for, and a log of results.
 - **Route.** Did it use the API as described in `tools.md`, rather than
   fetching web pages or answering from memory?
 - **API calls.** Which requests and filter names worked or failed? Record
-  them; they answer open questions 2 to 5.
+  them, and update the "to verify" statuses in `shared/tools.md`.
 - **Accuracy.** Are IDs, versions, URLs, licenses and creators correct?
   Spot-check against the workflow pages.
 - **Invention.** Watch especially for DOIs, authors, tool names and

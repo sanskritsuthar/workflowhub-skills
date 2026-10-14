@@ -82,7 +82,6 @@ helper agents, and the skills themselves don't change.
 ```
 workflowhub-skills/
 ├── README.md             This file
-├── OPEN-QUESTIONS.md     Questions for the team, API and policy
 ├── TESTING.md            Test prompts, what to check, and results
 ├── shared/
 │   └── tools.md          Master copy of how skills reach WorkflowHub
@@ -234,15 +233,10 @@ Found in the first test (details in [TESTING.md](TESTING.md)):
 - **Workflow-type filter.** It works through the API, but the exact
   parameter name still needs recording in `tools.md`.
 
-## Open questions
-
-See [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) for questions about the API, the
-MCP server, policy, standards and maintenance.
 
 ## License
 
-Not yet decided. The skill files currently declare BSD-3-Clause, pending the
-team's decision (question 10 in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md)).
+ Not yet decided. The skill files currently declare BSD-3-Clause, pending the team's decision.
 
 ## Maintainers
 
