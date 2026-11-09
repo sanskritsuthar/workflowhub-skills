@@ -110,6 +110,49 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: Test 2 (Evaluate) on the Simplified Technical English pilot
+
+- **Test:** test 2, "Compare the top two from that shortlist. It's for a
+  paper. Which should I use?" Test 1's session wasn't available, so the
+  two workflows its log names were used: 401 (rnaseq-pe/main) and 1201
+  (rnaseq-de/main), with test 1's context (mouse liver, paired-end,
+  treated vs control, Galaxy).
+- **Agent and route:** Claude Code desktop on macOS, public API (interim).
+  The skill was loaded directly, so activation was not tested. The tester
+  wrote the skill and its references, and did not reread `tools.md`, the
+  profile or the Galaxy guide, which were already in context: a fresh
+  agent should repeat this test.
+- **Result:** pass with issues (fixed)
+- **What happened:** The procedure ran in order: context, level 1 and 2
+  profiles for both workflows, ratings for all eight criteria with sources,
+  comparison, concerns, what WorkflowHub can't tell, and a stop for the
+  decision. 10 requests (2 metadata, 2 Bioschemas, 2 Link headers, 2 crate
+  metadata, 2 TRS descriptors); 257 KB saved, about 15 KB read into
+  context. Verdict: both fit with caveats, used together, 401 then 1201.
+- **Verified against WorkflowHub:** 401 v19 (upstream 1.8, 2026-10-30) and
+  1201 v11 (upstream 0.12, 2026-09-08); MIT; team IWC (Bioschemas);
+  creators Lucille Delisle (no ORCID) and Pavankumar Videm (ORCID); no DOI
+  on any version, no `cite-as` link, no linked publication; maturity not
+  declared in crate or Bioschemas; README and tests file in both crates.
+  401's file uses fastp, while its registry description still says
+  cutadapt, and its `tools` list names 3 of its 10 tools. 401 needs a STAR
+  index held on the Galaxy server; 1201 needs no server reference.
+- **Issues:**
+  - The two workflows are consecutive stages, not alternatives, and the
+    skill's comparison step assumed alternatives. Step 4 now says how to
+    handle stages.
+  - The Galaxy reference scan listed four STAR settings that only sit
+    under `refGenomeSource`. Fixed in the guide (it now checks the last
+    named part of each key) and retested on six workflows.
+  - Running the scans on subworkflows needed a command the guide didn't
+    give; it does now.
+  - `tools.md` sends crate reading through `ro-crate-consume` and the
+    `rocrate` library. For three level 1 facts (maturity, file list,
+    tests) the test read the metadata-only response directly instead.
+    Open question: should the profile allow that for single fields?
+  - Whether 401's count table has a header line (a setting in 1201) was
+    left unknown, for workflowhub-explain.
+
 ### 2026-11-09: Simplified Technical English pilot on evaluate
 
 - **Test:** style and coverage check of the rewritten `workflowhub-evaluate`
@@ -132,9 +175,8 @@ Add an entry for each test run, newest first.
   | Words in the file | 1,514 | about 1,710 |
 
   The frontmatter is unchanged except `metadata.version`.
-- **Issues:** the skill has not been run on a test prompt since the
-  rewrite. Run Test 2 (Evaluate) before rolling the style out to the other
-  skills.
+- **Issues:** the skill had not been run on a test prompt; see the next
+  entry above.
 
 ### 2026-11-09: System guides moved to shared and tested
 

@@ -3,7 +3,7 @@ name: workflowhub-evaluate
 description: "Assess whether specific WorkflowHub workflows are trustworthy and fit a researcher's data and purpose, or compare several side by side, and give an evidence-based verdict. Use this whenever a researcher has particular workflows in mind (WorkflowHub IDs, URLs, names, or a shortlist from workflowhub-find) and asks things like 'is this any good', 'which one should I use', 'will this work with my data', 'is it maintained', 'can I reuse it' or 'compare these', even if they don't say 'evaluate'. Read-only. To search for candidates, use workflowhub-find; for a step-by-step walkthrough of what a workflow does, use workflowhub-explain."
 license: BSD-3-Clause
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -195,6 +195,18 @@ Do not use numerical scores. Scores show more precision than the evidence
 has. They also hide trade-offs that the researcher must see.
 
 ### 4. Compare several workflows
+
+First, find if the workflows do the same task. Some workflows do different
+stages of one analysis. For example, one workflow makes count tables from
+reads. A second workflow uses count tables to find differences in
+expression. If the workflows are stages:
+
+- Tell the researcher that the workflows are not alternatives.
+- Give the order in which to use them.
+- Compare the outputs of each stage with the inputs of the next stage.
+  Report each change that the researcher must make between the stages.
+
+Then compare the workflows:
 
 1. Make a comparison matrix. Put the criteria in rows and the workflows in
    columns. Use the same ratings.
