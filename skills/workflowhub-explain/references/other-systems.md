@@ -13,7 +13,10 @@ read the workflow.
    detail the format allows.
 4. Look for environment files (`requirements.txt`, `environment.yml`,
    `Dockerfile`) to describe software requirements.
-5. State your confidence. "Explained from the README; the workflow file
+5. Keep files in the scratch folder and read them in pieces: list a file's
+   structure (headings, function or task names, JSON keys) before reading
+   any part in full.
+6. State your confidence. "Explained from the README; the workflow file
    itself is in a format I couldn't read in detail" is a useful sentence.
 
 ## Notes on common types

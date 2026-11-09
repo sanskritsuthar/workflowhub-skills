@@ -3,7 +3,7 @@ name: workflowhub-explain
 description: "Explain what a specific WorkflowHub workflow does, step by step: its inputs, processing steps, tools, key parameters, outputs and what it needs to run, and map its inputs to the researcher's own data. Use this whenever a researcher asks what a WorkflowHub workflow does, wants a walkthrough, asks what inputs or reference data it needs, whether their files will work with it, what they would need to install or provide, or how a Galaxy, Nextflow, Snakemake, CWL or other workflow from WorkflowHub is structured, even if they don't say 'explain'. Read-only and never runs the workflow. To search for workflows, use workflowhub-find; to judge quality or compare workflows, use workflowhub-evaluate."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -47,7 +47,10 @@ undermines everything else you report.
 - **Say "unknown" rather than guess.** Never invent IDs, versions, DOIs,
   authors or licenses. Missing information is itself useful to the
   researcher.
-- **Spend context carefully.** Fetch only what the current step needs.
+- **Spend context carefully.** Fetch only what the current step needs. Save
+  each response to a scratch folder and read only the fields you need from it,
+  rather than reading whole responses (see "Save first, then read what you
+  need" in `references/tools.md`).
 - **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
   one at a time, and back off with longer pauses if it returns errors or is
   slow (see `references/tools.md`).
@@ -78,11 +81,30 @@ because steps and parameters can change between versions.
 
 ### 2. Read the metadata
 
-Read the workflow's metadata from WorkflowHub: workflow type, description,
-license, and links to source repositories or documentation. This tells you
-which guide to use and gives you the author's own summary to check your
-reading against. Declared inputs, outputs and steps are not in this metadata;
-they are in the RO-Crate (step 3).
+Save the workflow's metadata response to the scratch folder (see "Save first,
+then read what you need" in `references/tools.md`), or reuse it if an earlier
+step saved it, and pull out: workflow type, description, license, and links
+to source repositories or documentation. This tells you which guide to use
+and gives you the author's own summary to check your reading against.
+
+The same response may have an `internals` block, with inputs, outputs and
+steps that WorkflowHub extracted from the workflow file. It is a hint, not a
+source to rely on (see "Where fields live" in `references/tools.md`):
+
+- **Empty means not extracted.** It is usually empty for Nextflow and
+  Snakemake, and sometimes for CWL. Don't read an empty list as "no inputs"
+  or "no steps"; go to step 3.
+- **Filled is not the same as complete.** For Galaxy it has been seen to
+  leave out unlabelled outputs or rename them `_anonymous_output_<n>`, to
+  show a subworkflow as one step, and to give inputs generic types such as
+  `File` without the data format.
+
+When it is filled, pull it out (counts first, then names) as an outline to
+plan step 3: which parts of the workflow file to read, and in what order.
+Confirm inputs, outputs and steps against the workflow file before you
+present them, and if you couldn't, say the list came from WorkflowHub's
+extracted summary and may be incomplete. `internals` has no parameter
+settings and can disagree with the crate; when it does, report both.
 
 ### 3. Get the content
 
@@ -94,8 +116,10 @@ inspection record exists for this version, use it instead of fetching again.
 This needs a WorkflowHub ID and version from step 1. Don't use it to search,
 and read the metadata of one workflow at a time, never of a whole result set.
 
-Then read the main workflow file. This needs the crate's ZIP, which is
-expensive for both server and client, so:
+Then get the main workflow file, unless the question can be answered without
+inputs, outputs or steps. For a Galaxy workflow, the TRS descriptor request in
+`references/tools.md` returns the file alone, without the ZIP. Otherwise this
+needs the crate's ZIP, which is expensive for both server and client, so:
 
 - check the size first and stay within the limit in `ro-crate-consume` (ask
   the researcher above it);
@@ -106,10 +130,13 @@ expensive for both server and client, so:
 - when asked to explain several workflows, explain one at a time and don't
   fetch ahead.
 
-Read large files selectively (the input definitions, the list of steps, the
-output definitions) rather than loading everything at once. Read other files
-only when the explanation needs them. `references/ro-crate.md` has tips for
-finding things in a crate.
+Keep the workflow file in the scratch folder and don't read it whole: a
+Galaxy file of 18 steps measured 88 KB, of which the inputs, steps and
+outputs took about 4 KB. Each guide in step 4 has a "Reading it without
+loading it all" section saying what to extract first. Start with inputs,
+steps and outputs; then read a particular step's parameters, or a README or
+test file, only when the explanation needs it. `references/ro-crate.md` has
+tips for finding things in a crate.
 
 Some workflows are registered as links to an external repository rather than
 as uploaded files. In that case, say so, give the link, and explain from the

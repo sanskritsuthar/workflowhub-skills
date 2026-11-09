@@ -77,6 +77,9 @@ Skills fall into two groups:
 - Many crates declare no inputs, outputs or workflow profile.
 - Maturity is not in the JSON API; the crate and Bioschemas give it as
   `creativeWorkStatus`, for generated crates only.
+- The JSON API's `internals` is empty for Nextflow and Snakemake (all 21
+  sampled) and can be incomplete for Galaxy (unlabelled outputs dropped or
+  renamed `_anonymous_output_<n>`). Treat it as a hint.
 - The JSON API does have inputs, outputs and steps (`internals`); the crate
   metadata has no steps, and the API and crate can disagree on inputs and
   outputs.

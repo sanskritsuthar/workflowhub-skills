@@ -43,7 +43,10 @@ undermines everything else you report.
 - **Say "unknown" rather than guess.** Never invent IDs, versions, DOIs,
   authors or licenses. Missing information is itself useful to the
   researcher.
-- **Spend context carefully.** Fetch only what the current step needs.
+- **Spend context carefully.** Fetch only what the current step needs. Save
+  each response to a scratch folder and read only the fields you need from it,
+  rather than reading whole responses (see "Save first, then read what you
+  need" in `references/tools.md`).
 - **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
   one at a time, and back off with longer pauses if it returns errors or is
   slow (see `references/tools.md`).

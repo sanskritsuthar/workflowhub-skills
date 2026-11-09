@@ -110,6 +110,36 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: Response sizes and save-first extraction
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass
+- **What happened:** Saved responses to a scratch folder and measured them,
+  then checked the extraction commands now in `shared/tools.md` and the
+  explain guides. Metadata responses for workflows 42, 123, 248, 1441 and
+  1625 were 3 to 13 KB; extracting the fields evaluate needs from 248 gave
+  740 bytes. Searches were 17 KB ("rna-seq") and 39 KB ("assembly", 302
+  hits); hits carry only ID and title. The Galaxy file for 248 version 7 was
+  88 KB (subworkflows 14 KB and `tool_state` 7.5 KB of the step data); its
+  inputs, steps and outputs extracted to about 4 KB.
+- **Verified against WorkflowHub:** TRS descriptor type codes `CWL` (360 v2),
+  `NFL` (1266 v7) and `SMK` (1815 v7) return HTTP 200 with the main file in
+  `content`. Outline commands in the CWL, Nextflow and Snakemake guides
+  ran on those three files.
+- **`internals` sample (35 workflows):** empty for all 11 Nextflow (57, 966,
+  979, 1002, 1005, 1058, 1266, 1864, 2199, 2341, 2374) and all 10 Snakemake
+  (554, 791, 1091, 1102, 1815, 1967, 2360, 2361, 2362, 2373); empty for CWL 2367, filled for the other 8 CWL;
+  filled for all 5 Galaxy (223, 224, 1594, 1612, 1616). Compared with the
+  Galaxy files for 248, 223, 1594 and 1612: steps and inputs matched; 1594
+  dropped 1 of 6 outputs (unlabelled) and 1612 gave 16 of 18 outputs, all as
+  `_anonymous_output_<n>`; input types were `File` or `string` without
+  Galaxy formats. 248 versions 1, 4 and 7 had identical `internals`, and the
+  file structure didn't change either, so version tracking is not
+  established.
+- **Issues:** the Nextflow and Snakemake commands for modules and rule
+  files were checked only against the main file, since the others need
+  the crate's ZIP, which was not downloaded.
+
 ### 2026-10-14: Inspect workflow 123 version 1
 
 - **Agent and route:** Claude Code, public API, Bioschemas and a saved crate

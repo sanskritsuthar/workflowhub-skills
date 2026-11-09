@@ -21,6 +21,24 @@ without opening the code.
 Don't read every module. List the processes in the order the workflow calls
 them, and name the tool each one runs.
 
+## Reading it without loading it all
+
+Nextflow's cost is the number of files, not the size of one. Keep the crate's
+files in the scratch folder and work from listings and searches:
+
+```bash
+grep -nE '^\s*(include|workflow|process)\b' main.nf      # entry point outline
+grep -rnE '^\s*process\s+\w+' modules/ subworkflows/      # every process, one line each
+grep -rnE '^\s*(container|conda)\b' modules/              # software per process
+```
+
+From `nextflow_schema.json`, extract each parameter's name, type, default,
+description and whether it is required, rather than reading the whole
+schema. Read a module's `script:` block only when the explanation needs that
+step's command. The `main.nf` outline was tested 2026-11-09 on workflow 1266;
+the TRS descriptor returns only `main.nf`, so the other files need the
+crate's ZIP.
+
 ## nf-core conventions
 
 Pipelines following nf-core conventions add:

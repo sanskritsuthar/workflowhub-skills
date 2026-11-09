@@ -3,7 +3,7 @@ name: workflowhub-evaluate
 description: "Assess whether specific WorkflowHub workflows are trustworthy and fit a researcher's data and purpose, or compare several side by side, and give an evidence-based verdict. Use this whenever a researcher has particular workflows in mind (WorkflowHub IDs, URLs, names, or a shortlist from workflowhub-find) and asks things like 'is this any good', 'which one should I use', 'will this work with my data', 'is it maintained', 'can I reuse it' or 'compare these', even if they don't say 'evaluate'. Read-only. To search for candidates, use workflowhub-find; for a step-by-step walkthrough of what a workflow does, use workflowhub-explain."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -43,7 +43,10 @@ undermines everything else you report.
 - **Say "unknown" rather than guess.** Never invent IDs, versions, DOIs,
   authors or licenses. Missing information is itself useful to the
   researcher.
-- **Spend context carefully.** Fetch only what the current step needs.
+- **Spend context carefully.** Fetch only what the current step needs. Save
+  each response to a scratch folder and read only the fields you need from it,
+  rather than reading whole responses (see "Save first, then read what you
+  need" in `references/tools.md`).
 - **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
   one at a time, and back off with longer pauses if it returns errors or is
   slow (see `references/tools.md`).
@@ -84,6 +87,21 @@ license, version history with dates, creators and team, DOI, tags and topic
 annotations, declared inputs and outputs, and links to source repositories,
 documentation or publications.
 
+Save each workflow's metadata response to the scratch folder (one folder per
+ID and version, as `references/tools.md` describes) and pull out these fields
+with a JSON tool; don't read the whole response. When comparing several
+workflows, extract the same fields from each saved file so the comparison
+rests on like-for-like evidence.
+
+The response's `internals` block (inputs, outputs and steps WorkflowHub
+extracted from the workflow file) is often empty, always so far for Nextflow
+and Snakemake, and can be incomplete when filled (see "Where fields live" in
+`references/tools.md`). An empty block means "not extracted": rate the
+affected criteria from the crate or the workflow file, or as unknown, never
+as "no inputs declared". Don't judge one workflow as better documented than
+another because its `internals` is filled; that reflects its workflow type,
+not its authors' work.
+
 If a criterion depends on something the registry metadata lacks, such as
 declared inputs and outputs, tests, recorded runs, a confirmed DOI or the
 authors' ORCIDs, read it from the workflow's FAIR Signposting links and
@@ -102,8 +120,9 @@ view, use `workflowhub-inspect`. Rules for this:
 
 Look at the workflow's files only if a decision depends on something the
 metadata and crate metadata lack, such as whether it accepts a particular input
-format, and then read only the part you need. A full walkthrough is the job of
-workflowhub-explain.
+format. Then save the file to the scratch folder and search it, or extract the
+part you need, rather than reading it whole. A full walkthrough is the job of
+workflowhub-explain, which can reuse the files you saved.
 
 ### 3. Assess against the criteria
 

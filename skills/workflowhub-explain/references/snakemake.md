@@ -31,6 +31,22 @@ Each `rule` has some of:
 workflow ultimately produces. Work backwards from those targets to explain
 the order of steps.
 
+## Reading it without loading it all
+
+Keep the files in the scratch folder and outline them before reading rules:
+
+```bash
+grep -nE '^(rule|include|configfile|min_version|module|use rule)\b' Snakefile
+grep -nE '^rule\b|^\s+(input|output|conda|container|wrapper):' rules/*.smk
+```
+
+The first line lists the rule files it pulls in; the second gives each rule
+with its inputs, outputs and software, one line each. Read a rule's full
+body by line range only when you need its `shell:` or `params:`. Tested
+2026-11-09 on workflow 1815, whose Snakefile includes eight rule files; the
+TRS descriptor returns only the Snakefile, so the rule files need the
+crate's ZIP.
+
 ## Inputs and configuration
 
 Inputs are normally described by the config file and the sample sheet. When

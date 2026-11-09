@@ -21,6 +21,22 @@ Common Workflow Language files are YAML (sometimes JSON) with `cwlVersion`
 
 Follow `in` sources to work out the order of steps.
 
+## Reading it without loading it all
+
+Keep the file in the scratch folder. First find where the top-level sections
+start, then read each section by line range:
+
+```bash
+grep -nE '^(cwlVersion|class|requirements|inputs|outputs|steps|\$graph):' workflow.cwl
+grep -nE '^\s+run:' workflow.cwl      # the tool or subworkflow each step runs
+```
+
+Read `inputs` and `outputs` next, then list the step names under `steps`
+with their `run` targets before reading any step in full. Open a `run` file
+(another `.cwl`) only for the steps the explanation needs. Tested 2026-11-09
+on workflow 360 (264 lines). For a packed file, list the `$graph` entries'
+`id` and `class` first and read only `#main` before the tools it uses.
+
 ## Types
 
 `File`, `Directory`, `string`, `int`, `boolean`, enums and records. A

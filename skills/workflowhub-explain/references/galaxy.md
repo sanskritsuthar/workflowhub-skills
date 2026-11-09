@@ -32,6 +32,34 @@ sometimes `release` (a version string), `tags`, and `steps`.
 - `subworkflow`: an embedded workflow, for `subworkflow` steps. Explain it
   as a single stage, and expand only if asked.
 
+## Reading it without loading it all
+
+A `.ga` file is mostly `tool_state` strings, post-job actions and embedded
+subworkflows; the structure you need is a small part of it (workflow 248
+version 7: 88 KB file, about 4 KB of inputs, steps and outputs). Keep the
+file in the scratch folder and extract, in this order (tested 2026-11-09 on
+workflow 248):
+
+```bash
+# Inputs: label, kind, description
+jq -c '[.steps[] | select(.type | test("input")) | {label, type, annotation}]' workflow.ga
+
+# Steps: one line each, with the tool and where its inputs come from;
+# subworkflows as a name and step count, not their full contents
+jq -c '.steps[] | {id, type, label, tool_id, tool_version,
+  sub: (if .subworkflow then {name: .subworkflow.name,
+        steps: (.subworkflow.steps | length)} else null end),
+  from: [.input_connections[]? | (if type == "array" then .[] else . end) | .id] | unique}' workflow.ga
+
+# Outputs the author marked as results
+jq -c '[.steps[] | .workflow_outputs[]? | .label]' workflow.ga
+```
+
+Then decode one step's settings only when you need its parameters:
+`jq -r '.steps["<id>"].tool_state | fromjson' workflow.ga`. Expand a
+subworkflow the same way, through `.steps["<id>"].subworkflow`, only if the
+researcher asks about that stage.
+
 ## Inputs
 
 For `data_input` and `data_collection_input` steps, `tool_state` usually
