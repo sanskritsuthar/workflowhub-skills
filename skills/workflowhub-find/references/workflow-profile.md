@@ -73,7 +73,7 @@ workflows 248, 1266, 1612 and 1815 unless noted.
 
 | Field | Where to look, in order | Notes |
 |---|---|---|
-| ID, version, URL | the request; API `version`, `latest_version` | If no version was asked for, use `latest_version` and say so. |
+| ID, version, URL | the request; API `version`, `latest_version` | If no version was asked for, use `latest_version` and say so. A request without `?version=` describes the latest version (248, 401, 1201), so there is no need to repeat it with the version. |
 | Title, description | API `title`, `description`; crate root `name`, `description`; README | |
 | Workflow type | API `workflow_class.key`; crate main entity `programmingLanguage`; the main file's extension | |
 | Topics, operations, keywords | API `topic_annotations`, `operation_annotations` (EDAM terms), `tags`; Bioschemas `keywords` | Often empty: `not declared`. |

@@ -79,10 +79,11 @@ jq -r 'def deep: if type == "string" and test("^[\\[{]") then (fromjson? // .) |
                  elif type == "array" then map(deep) else . end;
   def toolname: .tool_id // "" | split("/") | if length > 1 then .[-2] else .[0] end;
   .steps[] | select(.type == "tool") | . as $s | (.tool_state | deep) as $t
-  | [$t | paths(scalars) as $p | {k: ($p | map(tostring) | join(".")), v: ($t | getpath($p))}]
-  | .[] | select((.k | test("__[a-z_]+__$")) | not)
+  | [$t | paths(scalars) as $p
+     | {k: ($p | map(tostring) | join(".")), name: ([$p[] | strings] | last // ""), v: ($t | getpath($p))}]
+  | .[] | select(.name | test("^__[a-z_]+__$") | not)
   | select(.v == "cached" or .v == "indexed"
-           or (.k | test("ref_file|dbkey|genome|database|builtin|\\.index$"; "i")))
+           or (.name | test("ref_file|dbkey|genome|database|builtin|^index$"; "i")))
   | "\($s.id)\t\($s | toolname)\t\(.k) = \(.v)"' workflow.ga
 
 # Level 3: steps, one line each, with the tool and what feeds them;
@@ -109,14 +110,24 @@ jq -r 'def deep: if type == "string" and test("^[\\[{]") then (fromjson? // .) |
 Level 4, when the question is about one step: its settings with
 `jq '.steps["<id>"].tool_state | fromjson'`, or a subworkflow through
 `.steps["<id>"].subworkflow`, to which every command above also applies.
-The reference and run-time commands don't look inside subworkflows; run
-them on each subworkflow too when requirements matter.
+The reference and run-time commands don't look inside subworkflows. When
+requirements matter, save each subworkflow as its own file and run them on
+it too:
+
+```bash
+jq -r '.steps[] | select(.type == "subworkflow") | .id' workflow.ga
+jq '.steps["<id>"].subworkflow' workflow.ga > sub-<id>.ga
+```
 
 What the tested workflows showed: 1612 needs `hg38` (minimap2) and
 `hg38full` (bowtie2) on the server, and leaves two unicycler options open;
-1594 needs the BLAST database `refseq_mitochondrion`; 248 needs no server
-reference and leaves two optional inputs of its simulation steps open; 223
-needs neither.
+1594 needs the BLAST database `refseq_mitochondrion`; 401 (version 19) needs
+a STAR index for the chosen genome and a cached genome for Cufflinks, and
+its four subworkflows need none; 248 needs no server reference and leaves
+two optional inputs of its simulation steps open; 223 and 1201 need
+neither. The reference command checks the last named part of each setting,
+so settings that only sit under a reference-related heading, such as STAR's
+`refGenomeSource.sjdbOverhang`, aren't listed.
 
 ## Requirements to look out for
 
