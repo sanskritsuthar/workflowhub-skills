@@ -32,12 +32,24 @@ grep -rnE '^\s*process\s+\w+' modules/ subworkflows/      # every process, one l
 grep -rnE '^\s*(container|conda)\b' modules/              # software per process
 ```
 
-From `nextflow_schema.json`, extract each parameter's name, type, default,
-description and whether it is required, rather than reading the whole
-schema. Read a module's `script:` block only when the explanation needs that
-step's command. The `main.nf` outline was tested 2026-11-09 on workflow 1266;
-the TRS descriptor returns only `main.nf`, so the other files need the
-crate's ZIP.
+`nextflow_schema.json` is the best source for what the user provides. Take
+the groups and their required parameters first, then the parameters that
+take files or folders (data, in the profile's terms):
+
+```bash
+jq -c '(.["$defs"] // .definitions) | to_entries
+  | map({group: .key, n: (.value.properties | length), required: (.value.required // [])})' nextflow_schema.json
+jq -r '(.["$defs"] // .definitions) | .[].properties | to_entries[]
+  | select(.value.format? | tostring | test("path"))
+  | "\(.key)\t\(.value.format)\t\(.value.default // "")"' nextflow_schema.json
+```
+
+Read a module's `script:` block only when the explanation needs that step's
+command. The required Nextflow version is `nextflowVersion` in the
+`manifest` block of `nextflow.config`. Tested 2026-11-09 on workflow 1266
+(41 parameters in 9 groups; 21 processes, 61 container or conda lines;
+Nextflow `>=26.04.0`). The TRS descriptor returns only `main.nf`, so the
+other files need the crate's ZIP (375 KB for 1266).
 
 ## nf-core conventions
 

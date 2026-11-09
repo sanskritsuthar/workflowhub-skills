@@ -112,7 +112,8 @@ workflowhub-skills/
 ├── AGENTS.md             Purpose and rules for agents working on the repo
 ├── TESTING.md            Test prompts, what to check, and results
 ├── shared/
-│   └── tools.md          Master copy of how skills reach WorkflowHub
+│   ├── tools.md          Master copy of how skills reach WorkflowHub
+│   └── workflow-profile.md  Master copy of what skills collect about a workflow
 ├── skills/               Complete skills: install these
 │   ├── workflowhub-find/
 │   ├── workflowhub-evaluate/
@@ -275,10 +276,13 @@ The skills never scrape web pages or answer from memory.
 
 ## Maintaining the skills
 
-- **`shared/tools.md` is the master copy** for the WorkflowHub skills. The
-  generic skills (`fair-signposting`, `ro-crate-consume`) keep their own
-  `references/tools.md` and must not be overwritten. After editing the
-  master, copy it into every WorkflowHub skill:
+- **`shared/tools.md` and `shared/workflow-profile.md` are master copies**
+  for the WorkflowHub skills. `workflow-profile.md` says what the skills
+  collect about a workflow, where each fact is found, and what to record when
+  it isn't available. The generic skills (`fair-signposting`,
+  `ro-crate-consume`) keep their own `references/tools.md` and must not be
+  overwritten. After editing a master, copy it into every WorkflowHub skill
+  (the same loop, with `workflow-profile.md` in place of `tools.md`):
 
 ```bash
   for s in skills/workflowhub-*/; do cp shared/tools.md "${s}references/tools.md"; done

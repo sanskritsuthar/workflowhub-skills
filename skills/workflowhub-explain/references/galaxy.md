@@ -38,11 +38,14 @@ A `.ga` file is mostly `tool_state` strings, post-job actions and embedded
 subworkflows; the structure you need is a small part of it (workflow 248
 version 7: 88 KB file, about 4 KB of inputs, steps and outputs). Keep the
 file in the scratch folder and extract, in this order (tested 2026-11-09 on
-workflow 248):
+workflows 248 and 1612):
 
 ```bash
-# Inputs: label, kind, description
-jq -c '[.steps[] | select(.type | test("input")) | {label, type, annotation}]' workflow.ga
+# Inputs: label, kind, description, and from their settings the collection
+# type (data), value type (settings) and whether they're optional
+jq -c '[.steps[] | select(.type | test("input")) | {label, type, annotation,
+  settings: (.tool_state | fromjson? | {format, collection_type, parameter_type, optional}
+             | with_entries(select(.value != null)))}]' workflow.ga
 
 # Steps: one line each, with the tool and where its inputs come from;
 # subworkflows as a name and step count, not their full contents
@@ -51,8 +54,9 @@ jq -c '.steps[] | {id, type, label, tool_id, tool_version,
         steps: (.subworkflow.steps | length)} else null end),
   from: [.input_connections[]? | (if type == "array" then .[] else . end) | .id] | unique}' workflow.ga
 
-# Outputs the author marked as results
-jq -c '[.steps[] | .workflow_outputs[]? | .label]' workflow.ga
+# Outputs the author marked as results, with the step and output name, which
+# is all there is when the author left them unlabelled (all 18 in 1612)
+jq -c '[.steps[] | . as $s | .workflow_outputs[]? | {label, step: $s.id, output: .output_name}]' workflow.ga
 ```
 
 Then decode one step's settings only when you need its parameters:
@@ -72,7 +76,28 @@ terms: "a set of paired-end samples, uploaded together".
 - **Reference data held on the Galaxy server:** parameters that select a
   "cached" or "built-in" reference, such as a genome index. The researcher's
   Galaxy server must have that reference installed. Flag this; it is a common
-  reason workflows fail on a different server.
+  reason workflows fail on a different server. It appears only in step
+  settings, some of which are JSON stored as text inside the JSON, so a
+  plain search misses it. This lists every setting that picks a reference,
+  database or index (tested 2026-11-09: 1612 needs `hg38` for minimap2 and
+  `hg38full` for bowtie2, 1594 needs the BLAST database
+  `refseq_mitochondrion`, 248 and 223 need none):
+
+  ```bash
+  jq -r 'def deep: if type == "string" and test("^[\\[{]") then (fromjson? // .) | deep
+                   elif type == "object" then map_values(deep)
+                   elif type == "array" then map(deep) else . end;
+    .steps[] | select(.type == "tool") | . as $s | (.tool_state | deep) as $t
+    | [$t | paths(scalars) as $p | {k: ($p | map(tostring) | join(".")), v: ($t | getpath($p))}]
+    | .[] | select((.k | test("__[a-z_]+__$")) | not)
+    | select(.v == "cached" or .v == "indexed"
+             or (.k | test("ref_file|dbkey|genome|database|builtin|\\.index$"; "i")))
+    | "\($s.id)\t\($s.tool_id | split("/") | .[-2])\t\(.k) = \(.v)"' workflow.ga
+  ```
+
+  Run it whenever requirements matter, including during an evaluation. A
+  subworkflow's steps are not covered; run it on
+  `.steps["<id>"].subworkflow` too if there is one.
 - **Tools:** every tool must be installed on the server the researcher uses.
   Listing the tools helps them check.
 

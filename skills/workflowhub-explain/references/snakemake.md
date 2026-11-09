@@ -37,15 +37,20 @@ Keep the files in the scratch folder and outline them before reading rules:
 
 ```bash
 grep -nE '^(rule|include|configfile|min_version|module|use rule)\b' Snakefile
-grep -nE '^rule\b|^\s+(input|output|conda|container|wrapper):' rules/*.smk
+grep -nE '^rule\b' rules/*.smk                                     # rule names
+grep -nE '^rule\b|^\s+(input|output|conda|container|wrapper):' rules/<file>.smk
 ```
 
-The first line lists the rule files it pulls in; the second gives each rule
-with its inputs, outputs and software, one line each. Read a rule's full
-body by line range only when you need its `shell:` or `params:`. Tested
-2026-11-09 on workflow 1815, whose Snakefile includes eight rule files; the
-TRS descriptor returns only the Snakefile, so the rule files need the
-crate's ZIP.
+The first line lists the rule files it pulls in. The second lists the rules:
+enough for a summary (level 2). The third gives one rule file's rules with
+their inputs, outputs and software, one line each; run it per file, for the
+stages you are explaining, because across a large workflow it adds up.
+Workflow 1815 (tested 2026-11-09): 8 rule files, 220 KB in all, 96 rules;
+the names took 2.4 KB and the full directive outline 21.5 KB. For software,
+list the conda environment files the rules name (1815 names one per tool,
+such as `bakta.yaml`). Read a rule's full body by line range only when you
+need its `shell:` or `params:`. The TRS descriptor returns only the
+Snakefile, so the rule files need the crate's ZIP (3.5 MB for 1815).
 
 ## Inputs and configuration
 

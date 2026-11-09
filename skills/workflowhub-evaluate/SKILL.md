@@ -3,7 +3,7 @@ name: workflowhub-evaluate
 description: "Assess whether specific WorkflowHub workflows are trustworthy and fit a researcher's data and purpose, or compare several side by side, and give an evidence-based verdict. Use this whenever a researcher has particular workflows in mind (WorkflowHub IDs, URLs, names, or a shortlist from workflowhub-find) and asks things like 'is this any good', 'which one should I use', 'will this work with my data', 'is it maintained', 'can I reuse it' or 'compare these', even if they don't say 'evaluate'. Read-only. To search for candidates, use workflowhub-find; for a step-by-step walkthrough of what a workflow does, use workflowhub-explain."
 license: BSD-3-Clause
 metadata:
-  version: "0.1.4"
+  version: "0.2.0"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -43,10 +43,11 @@ undermines everything else you report.
 - **Say "unknown" rather than guess.** Never invent IDs, versions, DOIs,
   authors or licenses. Missing information is itself useful to the
   researcher.
-- **Spend context carefully.** Fetch only what the current step needs. Save
-  each response to a scratch folder and read only the fields you need from it,
-  rather than reading whole responses (see "Save first, then read what you
-  need" in `references/tools.md`).
+- **Spend context carefully, but never at the cost of the answer.** Save each
+  response to a scratch folder and read only the fields you need from it (see
+  "Save first, then read what you need" in `references/tools.md`). When the
+  question needs more, read more. `references/workflow-profile.md` says what
+  to collect and what to write when something isn't available.
 - **Pace requests.** Wait at least 0.5 seconds between requests to WorkflowHub,
   one at a time, and back off with longer pauses if it returns errors or is
   slow (see `references/tools.md`).
@@ -82,25 +83,32 @@ depending on it, rather than stopping to ask several questions.
 
 ### 2. Gather evidence
 
-For each workflow, read its metadata: description, workflow type, maturity,
-license, version history with dates, creators and team, DOI, tags and topic
-annotations, declared inputs and outputs, and links to source repositories,
-documentation or publications.
+For each workflow, build its profile to level 2, as
+`references/workflow-profile.md` describes, or reuse one saved earlier for the
+same version. The profile file says where each fact is found, which source
+to try first, and what to write when a source is missing or can't be read.
+Level 1 (registry facts) covers task fit, license, maintenance, credibility
+and most of platform fit and documentation. Level 2 (structure summary)
+covers input and output fit and requirements.
 
-Save each workflow's metadata response to the scratch folder (one folder per
-ID and version, as `references/tools.md` describes) and pull out these fields
-with a JSON tool; don't read the whole response. When comparing several
-workflows, extract the same fields from each saved file so the comparison
-rests on like-for-like evidence.
+Go deeper for a criterion when the researcher's question turns on it, and
+read only that part: one input's format when they asked whether their files
+will work, or the settings that select reference data when they asked what
+they would need to provide.
 
-The response's `internals` block (inputs, outputs and steps WorkflowHub
-extracted from the workflow file) is often empty, always so far for Nextflow
-and Snakemake, and can be incomplete when filled (see "Where fields live" in
-`references/tools.md`). An empty block means "not extracted": rate the
-affected criteria from the crate or the workflow file, or as unknown, never
-as "no inputs declared". Don't judge one workflow as better documented than
-another because its `internals` is filled; that reflects its workflow type,
-not its authors' work.
+When facts are missing:
+
+- **`not declared` is a finding.** Rate it: a missing license is weak for
+  publication.
+- **`unknown` is not a finding.** Rate the criterion unknown and say what
+  would settle it.
+- **Don't reward extracted metadata.** A workflow isn't better documented
+  because WorkflowHub happened to extract more about it, such as a filled
+  `internals` block, which depends on the workflow type rather than the
+  authors' work.
+
+When comparing several workflows, build every profile to the same level, so
+each is judged on like-for-like evidence.
 
 If a criterion depends on something the registry metadata lacks, such as
 declared inputs and outputs, tests, recorded runs, a confirmed DOI or the
@@ -118,11 +126,11 @@ view, use `workflowhub-inspect`. Rules for this:
 - When the API, crate and Bioschemas disagree (inputs, outputs, creators,
   dates), report each value and its source and don't pick one silently.
 
-Look at the workflow's files only if a decision depends on something the
-metadata and crate metadata lack, such as whether it accepts a particular input
-format. Then save the file to the scratch folder and search it, or extract the
-part you need, rather than reading it whole. A full walkthrough is the job of
-workflowhub-explain, which can reuse the files you saved.
+Look at the workflow's files when a decision depends on something the
+registry and crate metadata lack, such as whether it accepts a particular
+input format. Save the file to the scratch folder and search it, or extract
+the part you need; read it whole if it is small. A full walkthrough is the
+job of workflowhub-explain, which can reuse the files and profile you saved.
 
 ### 3. Assess against the criteria
 

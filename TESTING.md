@@ -110,6 +110,36 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: Workflow profile on four degraded cases
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass with issues (fixed in the same change)
+- **What happened:** Built level 1 and 2 profiles, following
+  `workflow-profile.md`'s source order, for 1266 (Nextflow, empty
+  `internals`, no creators), 1612 (Galaxy, no repository or maturity, all
+  outputs unlabelled), 1815 (Snakemake, logic in 8 rule files) and 2367 (CWL,
+  empty `internals`, 61 MB ZIP). Every level 1 field ended as a value with a
+  source or `not declared`. Level 2 was reached from the files for 1266,
+  1612 and 1815, and from the main file alone for 2367.
+- **Verified against WorkflowHub:** `versions[].remote` and `ref` give the
+  source repository for 248, 360, 1266, 1815 and 2367. The API's `creators`
+  carries names and ORCIDs (248, 1815, 2367). The team name is only in
+  Bioschemas `producer`. Maturity differed for 1266 (crate Stable,
+  Bioschemas none). No crate of the four declares inputs or outputs.
+  Every code block in the Galaxy, CWL, Nextflow and Snakemake guides ran
+  verbatim on these files (output 0.4 to 7.4 KB).
+- **Issues found and fixed:**
+  - The crate's `hasPart` is not a full file list: 1815 lists 2 parts and
+    holds 117 files, including the 8 rule files; 1266 lists 23 and holds 147.
+  - Galaxy 1612 needs `hg38` (minimap2) and `hg38full` (bowtie2) on the
+    server, and 1594 the BLAST database `refseq_mitochondrion`, visible only
+    in step settings, some of them JSON stored as text. A level 2 summary
+    alone would have missed them; the Galaxy guide now has a scan for them.
+  - The Snakemake rule outline was 21.5 KB for 96 rules; listing rule names
+    first takes 2.4 KB.
+  - Galaxy inputs' collection type, value type and optional flag are in
+    their settings; the Galaxy guide's input command now reads them.
+
 ### 2026-11-09: Response sizes and save-first extraction
 
 - **Agent and route:** Claude Code desktop on macOS, public API (interim)
