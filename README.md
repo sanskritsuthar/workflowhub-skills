@@ -18,12 +18,12 @@ explains what these skills are for and the rules for changing them.
 
 | Component | What it does | Status |
 |---|---|---|
-| `workflowhub-find` | Turns a research need into a short, justified shortlist of workflows | Draft, tested once |
-| `workflowhub-evaluate` | Judges whether specific workflows fit a researcher's data and purpose, and compares candidates | Draft, not yet tested |
-| `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, not yet tested |
-| `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, not yet tested |
+| `workflowhub-find` | Turns a research need into a short, justified shortlist of workflows | Draft, tested (tests 1 and 7, latest 2026-11-09) |
+| `workflowhub-evaluate` | Judges whether specific workflows fit a researcher's data and purpose, and compares candidates | Draft, tested (test 2, 2026-11-09) |
+| `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, tested (test 5, 2026-11-09) |
+| `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, tested (test 6, 2026-11-09) |
 | `fair-signposting` | Generic: reads FAIR Signposting links (Level 1 headers, Level 2 linksets) to find a resource's identifier, metadata and files | Draft, tested on WorkflowHub only |
-| `workflowhub-inspect` | Inspects a workflow version through signposting and its RO-Crate: profiles (Workflow RO-Crate, Testing, Run Crates), inputs, tests, recorded runs | Draft, not yet tested |
+| `workflowhub-inspect` | Inspects a workflow version through signposting and its RO-Crate: profiles (Workflow RO-Crate, Testing, Run Crates), inputs, tests, recorded runs | Draft, tested (2026-10-14; test 12, 2026-11-09) |
 | `ro-crate-consume` | Generic: retrieves and reads an RO-Crate (signposting, content negotiation, size and rate limits) with the `rocrate` library | Draft, tested on WorkflowHub only |
 | `workflowhub-reuse` | Prepares a chosen workflow to run in the researcher's environment | Outline only |
 | `workflowhub-track-updates` | Checks recorded workflows for new versions | Outline only |

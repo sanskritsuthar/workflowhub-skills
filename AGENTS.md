@@ -83,9 +83,9 @@ Skills fall into two groups:
     they are complete.
 12. **Write skill instructions in Simplified Technical English,** about 80%
     of the way to [ASD-STE100](https://www.asd-ste100.org/). This applies to
-    the body of each WorkflowHub `SKILL.md` and to its `references/` files.
-    `workflowhub-evaluate`'s `SKILL.md` is the pilot; the other files still
-    use the earlier style. In practice:
+    the body of each WorkflowHub `SKILL.md`, to its `references/` files and
+    to the masters in `shared/`. All of them use it since 2026-11-09. In
+    practice:
     - one instruction in each sentence, in the imperative and active voice;
     - no more than 20 words in an instruction and 25 in a description;
     - one term for one thing, used the same way everywhere;

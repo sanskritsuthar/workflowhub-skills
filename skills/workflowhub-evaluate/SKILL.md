@@ -3,7 +3,7 @@ name: workflowhub-evaluate
 description: "Assess whether specific WorkflowHub workflows are trustworthy and fit a researcher's data and purpose, or compare several side by side, and give an evidence-based verdict. Use this whenever a researcher has particular workflows in mind (WorkflowHub IDs, URLs, names, or a shortlist from workflowhub-find) and asks things like 'is this any good', 'which one should I use', 'will this work with my data', 'is it maintained', 'can I reuse it' or 'compare these', even if they don't say 'evaluate'. Read-only. To search for candidates, use workflowhub-find; for a step-by-step walkthrough of what a workflow does, use workflowhub-explain."
 license: BSD-3-Clause
 metadata:
-  version: "0.2.2"
+  version: "0.2.3"
   status: draft
   maintainer: eScience Lab, University of Manchester
 # compatibility: Requires the WorkflowHub MCP server (read-only tools)
@@ -163,7 +163,8 @@ rules:
 - Do not download a crate again.
 - If you need more than approximately five crates, tell the researcher the
   number. Ask before you continue.
-- If an inspection record for the same version exists, use it.
+- If an inspection record or a saved profile for the same version already
+  has the crate facts, use it.
 - If the API, the crate and Bioschemas give different values (inputs,
   outputs, creators, dates), report each value and its source. Do not select
   one value without a statement.
