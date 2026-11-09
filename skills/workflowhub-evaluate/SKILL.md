@@ -91,6 +91,19 @@ Level 1 (registry facts) covers task fit, license, maintenance, credibility
 and most of platform fit and documentation. Level 2 (structure summary)
 covers input and output fit and requirements.
 
+Level 2 usually needs the workflow's own files, because crates rarely declare
+inputs and outputs. Use the guide for the workflow's system. Its "Filling
+the profile" table says where each fact is, its commands extract it, and its
+"Requirements to look out for" lists what most often blocks a run:
+
+| Workflow type | Guide |
+|---|---|
+| Galaxy | `references/galaxy.md` |
+| Common Workflow Language (CWL) | `references/cwl.md` |
+| Nextflow | `references/nextflow.md` |
+| Snakemake | `references/snakemake.md` |
+| Anything else (KNIME, Jupyter, WDL, scripts…) | `references/other-systems.md` |
+
 Go deeper for a criterion when the researcher's question turns on it, and
 read only that part: one input's format when they asked whether their files
 will work, or the settings that select reference data when they asked what

@@ -36,7 +36,7 @@ what they need?
 
 **Documentation.** Could the researcher understand and run it?
 - Evidence: quality of the description, linked documentation, explained
-  parameters, example or test data.
+  parameters, example or test data, a diagram (the profile's `docs`).
 
 ## Trust
 

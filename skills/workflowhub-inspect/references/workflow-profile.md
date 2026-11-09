@@ -39,7 +39,7 @@ question turns on it. Two common cases:
   Galaxy server, and the only place that says so is one step's settings.
   Nextflow's `--genome` parameter and its config are similar. When the
   researcher's data or platform depends on it, look, even while evaluating;
-  each system's guide says where.
+  each system guide says where (see "System guides" below).
 - **A format question** ("will it take my BAM files?") needs the declared
   format of one input. Read that input at level 3, not the whole workflow.
 
@@ -118,6 +118,7 @@ structure:
     readme: "<path or not declared>"
     usage: "<path or not declared>"
     tests: "<path or not declared>"
+    diagram: "<path or not declared>"   # the crate's `image` on the main workflow, or an image file in the crate
 ```
 
 Data and settings sit in one list because workflow systems draw the line
@@ -142,11 +143,16 @@ Work down this list. The first three cost little and often settle level 2.
 3. **Hints:** the API's `internals` and `tools`. Use them to plan what to
    read, not as the answer (`tools.md`).
 4. **The workflow file and its companions.** The authoritative source. How
-   to read each system's files is in its guide. Because sources 1 to 3 are
+   to read each system's files is in its guide (see "System guides" below).
+   Because sources 1 to 3 are
    so often empty, expect level 2 to need the main workflow file, which the
    TRS request returns without the ZIP (`tools.md`). Companion files, such as
    Nextflow modules, Snakemake rule files and CWL tool files, need the ZIP.
-5. **The README and docs,** for what the files leave unclear.
+5. **The README, docs and diagram,** for what the files leave unclear. A
+   diagram drawn by the authors can name the stages in their own words
+   (248's SVG: "Complex Setup" and the stages after it), which the workflow
+   file doesn't. One generated from the workflow shows the same graph as
+   the file, so read it for facts only when the file can't be read.
 
 Tested 2026-11-09: level 2 was reached for 1266 (Nextflow), 1612 (Galaxy)
 and 1815 (Snakemake) from their files, and for 2367 (CWL) from the main file
@@ -172,6 +178,15 @@ are more files than the question justifies. Then:
   README or a hint rather than the workflow itself;
 - still answer the question, and say which parts are partial and what would
   complete them.
+
+### System guides
+
+What differs between workflow systems is only where each fact sits and how
+to extract it. That is in one guide per system: `galaxy.md`, `cwl.md`,
+`nextflow.md`, `snakemake.md` and, for anything else, `other-systems.md`.
+They are in the evaluate and explain skills. Each maps the profile's fields
+to that system's files, gives tested commands for levels 2 and 3, says what
+to skip, and lists the requirements that most often block a run.
 
 ## Saving and reusing the profile
 

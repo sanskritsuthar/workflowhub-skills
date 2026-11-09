@@ -110,6 +110,32 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: System guides moved to shared and tested
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass
+- **What happened:** Rewrote the Galaxy, CWL, Nextflow, Snakemake and
+  other-systems guides around the profile's fields, moved them to
+  `shared/systems/`, and copied them into evaluate as well as explain. Ran
+  every command block verbatim on real files: Galaxy 223, 248, 1594, 1612;
+  CWL 1765 (with its 43 tool files) and 2367 (main file only); Nextflow
+  1266; Snakemake 1815. All exited cleanly; output was 1.5 to 8.4 KB per
+  workflow.
+- **Verified against WorkflowHub:**
+  - Galaxy crates (223, 224, 248, 1594, 1612, 1616) hold the `.ga`, the
+    crate metadata, `ro-crate-preview.html` and a diagram image; 248 also
+    a README, changelog, tests file and test data. No XML. The editor's
+    layout is 3 to 10% of a `.ga` file and indentation 22 to 46%.
+  - Galaxy marks inputs wired from another step as `RuntimeValue` too, so
+    the run-time command removes them (1612's unicycler reads).
+  - Built-in Galaxy tools such as `Cut1` (1594) have no ToolShed path.
+  - CWL crate sizes: 78 KB (2347), 686 KB (1765), 61 MB (2367), 204 MB
+    (360, 361); 1333 sends no size.
+  - 1266 has six `process_gpu` processes; 1815 has six entry rules in its
+    Snakefile instead of `rule all`, and 66 files in `envs/`.
+- **Issues:** Galaxy Format 2 and packed CWL weren't in the sample and are
+  marked untested. The other-systems guide is untested.
+
 ### 2026-11-09: Workflow profile on four degraded cases
 
 - **Agent and route:** Claude Code desktop on macOS, public API (interim)

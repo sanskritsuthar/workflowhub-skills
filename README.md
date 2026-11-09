@@ -113,7 +113,9 @@ workflowhub-skills/
 ├── TESTING.md            Test prompts, what to check, and results
 ├── shared/
 │   ├── tools.md          Master copy of how skills reach WorkflowHub
-│   └── workflow-profile.md  Master copy of what skills collect about a workflow
+│   ├── workflow-profile.md  Master copy of what skills collect about a workflow
+│   └── systems/          Master copies of the guides for Galaxy, CWL,
+│                         Nextflow, Snakemake and other systems
 ├── skills/               Complete skills: install these
 │   ├── workflowhub-find/
 │   ├── workflowhub-evaluate/
@@ -281,11 +283,18 @@ The skills never scrape web pages or answer from memory.
   collect about a workflow, where each fact is found, and what to record when
   it isn't available. The generic skills (`fair-signposting`,
   `ro-crate-consume`) keep their own `references/tools.md` and must not be
-  overwritten. After editing a master, copy it into every WorkflowHub skill
-  (the same loop, with `workflow-profile.md` in place of `tools.md`):
+  overwritten. After editing a master, copy it into every WorkflowHub skill:
 
 ```bash
-  for s in skills/workflowhub-*/; do cp shared/tools.md "${s}references/tools.md"; done
+  for s in skills/workflowhub-*/; do cp shared/tools.md shared/workflow-profile.md "${s}references/"; done
+```
+
+- **`shared/systems/` holds the guides for each workflow system,** used by
+  the two skills that read workflow files. Copy them into evaluate and
+  explain after editing:
+
+```bash
+  for s in evaluate explain; do cp shared/systems/*.md "skills/workflowhub-$s/references/"; done
 ```
 
 - **Use only the six frontmatter fields from the Agent Skills

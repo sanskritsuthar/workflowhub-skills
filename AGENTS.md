@@ -29,6 +29,9 @@ name one agent's tools or commands inside a `SKILL.md`. Refer to capabilities
 - `shared/workflow-profile.md`: master copy of what they collect about a
   workflow (levels 1 to 4), where each fact is found, and what to record
   when it isn't available.
+- `shared/systems/`: master copies of the guides for each workflow system
+  (Galaxy, CWL, Nextflow, Snakemake, others): where each profile field sits
+  in that system's files, and tested commands to extract it.
 - `README.md`: overview, status table, installation and maintenance.
 - `TESTING.md`: test prompts, what to check, and the results log.
 
@@ -59,9 +62,13 @@ Skills fall into two groups:
 6. **Keep each `SKILL.md` under 500 lines.** Put detail in `references/`.
 7. **After editing `shared/tools.md` or `shared/workflow-profile.md`**, copy
    it into each `skills/workflowhub-*/references/` (not into the generic
-   skills).
+   skills). After editing a guide in `shared/systems/`, copy it into
+   `workflowhub-evaluate` and `workflowhub-explain`.
    Keep system-neutral knowledge in `workflow-profile.md` and anything
-   specific to one workflow system in that system's guide.
+   specific to one workflow system in that system's guide. Give every guide
+   the same sections ("Filling the profile", "Commands", "Requirements to
+   look out for", "Explaining it"), and run its commands on a real workflow
+   before committing.
    Never word a profile level as a limit: a skill must always be able to read
    more when the question needs it.
 8. **Don't add scripts.** Skills must work in any agent that supports the

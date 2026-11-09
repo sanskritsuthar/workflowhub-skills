@@ -133,11 +133,12 @@ needs the crate's ZIP, which is expensive for both server and client, so:
 
 Keep the workflow file in the scratch folder. Read it whole if it is small
 (under about 10 KB); otherwise don't, because a Galaxy file of 18 steps
-measured 88 KB, of which the inputs, steps and outputs took about 4 KB. Each
-guide in step 4 has a "Reading it without loading it all" section saying what
-to extract first. Fill the profile's structure to level 3 from what you read:
-what the user provides, steps, outputs and requirements. `references/ro-crate.md`
-has tips for finding things in a crate.
+measured 88 KB, of which the inputs, steps and outputs took about 4 KB. Load
+the guide for the workflow's system (the table in step 4) before reading:
+its "Filling the profile" table says where each part of the profile is, and
+its commands extract it. Fill the profile's structure to level 3: what the
+user provides, steps, outputs and requirements. `references/ro-crate.md` has
+tips for finding things in a crate.
 
 Sometimes the files can't be read: the workflow is only a link to an external
 repository, the researcher declines a large download, or the format is one
@@ -146,7 +147,10 @@ you can't read. Follow "When the files can't be read" in
 inputs and outputs, hints and the README, mark the structure as partial with
 the reason, and still explain, saying which parts are partial.
 
-### 4. Load the guide for the workflow system
+### 4. The guide for each workflow system
+
+Step 3 uses these guides to fill the profile; their "Explaining it" notes
+help with step 5.
 
 | Workflow type | Guide |
 |---|---|
@@ -201,8 +205,10 @@ names, formats and headers; there's no need to read large data files in full.
 
 ### 7. Present and pause
 
-Use `assets/explanation-template.md`. If the environment can render diagrams,
-a simple diagram of the stages helps; otherwise a numbered list is fine.
+Use `assets/explanation-template.md`. If the profile records a diagram from
+the authors, point the researcher to it, and use its stage names if it has
+them. Otherwise, if the environment can render diagrams, a simple diagram of
+the stages helps; if not, a numbered list is fine.
 
 Say which crate layers the explanation used (for example "Workflow RO-Crate
 with a recorded run") and what you did not check. Then pause. Natural next
