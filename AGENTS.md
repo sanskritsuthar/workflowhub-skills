@@ -81,6 +81,23 @@ Skills fall into two groups:
    changes meaningfully.
 11. **Don't publish drafts.** Skills in `drafts/` stay out of `skills/` until
     they are complete.
+12. **Write skill instructions in Simplified Technical English,** about 80%
+    of the way to [ASD-STE100](https://www.asd-ste100.org/). This applies to
+    the body of each WorkflowHub `SKILL.md` and to its `references/` files.
+    `workflowhub-evaluate`'s `SKILL.md` is the pilot; the other files still
+    use the earlier style. In practice:
+    - one instruction in each sentence, in the imperative and active voice;
+    - no more than 20 words in an instruction and 25 in a description;
+    - one term for one thing, used the same way everywhere;
+    - numbered lists for steps that happen in order;
+    - no phrasal verbs ("carry on", "back off") and few words ending in -ing.
+
+    The other 20% allows technical names (crate, metadata, ORCID) and short
+    reasons, which help an agent handle cases the rules don't cover. Don't
+    apply the style to the frontmatter `description`, code blocks, templates,
+    or the generic skills (`fair-signposting`, `ro-crate-consume`). When you
+    rewrite a file, list its instructions first and check that each one is
+    still there afterwards.
 
 ## Known behaviour of WorkflowHub worth remembering
 

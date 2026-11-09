@@ -110,6 +110,32 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: Simplified Technical English pilot on evaluate
+
+- **Test:** style and coverage check of the rewritten `workflowhub-evaluate`
+  `SKILL.md` (80% ASD-STE100); not yet a run of a test prompt.
+- **Agent and route:** Claude Code desktop on macOS; no WorkflowHub requests
+- **Result:** pass
+- **What happened:** Listed the 55 instructions and facts in the previous
+  text, rewrote the body, and checked that each one is in the new text.
+  A rough style check (sentence length, -ing words, passive voice, phrasal
+  verbs) gave:
+
+  | | Before | After |
+  |---|---|---|
+  | Sentences | 92 | 167 |
+  | Mean words per sentence | 14.0 | 8.6 |
+  | Over 20 words | 23 | 0 |
+  | Over 25 words | 13 | 0 |
+  | Passive constructions | 10 | 1 (a false positive) |
+  | Phrasal verbs | 3 | 0 |
+  | Words in the file | 1,514 | about 1,710 |
+
+  The frontmatter is unchanged except `metadata.version`.
+- **Issues:** the skill has not been run on a test prompt since the
+  rewrite. Run Test 2 (Evaluate) before rolling the style out to the other
+  skills.
+
 ### 2026-11-09: System guides moved to shared and tested
 
 - **Agent and route:** Claude Code desktop on macOS, public API (interim)
