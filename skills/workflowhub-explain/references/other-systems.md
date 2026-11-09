@@ -1,51 +1,54 @@
 # Other workflow systems
 
-How to fill the workflow profile (`workflow-profile.md`) when there is no
-guide for the workflow's system. WorkflowHub accepts many types. None of the
-notes below has been tested against WorkflowHub yet; say how deeply you
-could read the workflow.
+This guide tells you how to fill the workflow profile (`workflow-profile.md`)
+when there is no guide for the workflow system. WorkflowHub accepts many
+workflow types. We did not test the notes below on WorkflowHub. Tell the
+researcher how completely you could read the workflow.
 
 ## General approach
 
-1. Read the README and the workflow's description first.
-2. Find the entry point: the crate's main entity, or the obvious main file.
-   The crate's file list may be incomplete (`workflow-profile.md`), so list
-   the ZIP if you need to know what is there.
-3. Fill the profile at whatever depth the format allows:
-   - `provides`: declared inputs or parameters; files the code reads.
-   - `outputs`: declared outputs; files the code writes.
+1. Read the README and the description of the workflow first.
+2. Find the entry point: the main entity of the crate, or the main file.
+   The file list of the crate can be incomplete (`workflow-profile.md`). If
+   you must know all files, list the ZIP contents.
+3. Fill the profile as completely as the format lets you:
+   - `provides`: declared inputs or parameters; files that the code reads.
+   - `outputs`: declared outputs; files that the code writes.
    - `steps`: tasks, calls, cells, scripts or targets, in order.
    - `requirements`: environment files (`requirements.txt`,
      `environment.yml`, `Dockerfile`), containers, reference data.
    - `docs.tests`: test folders or example data.
-4. Keep files in the scratch folder and read them in pieces: list a file's
-   structure (headings, function or task names, JSON keys) before reading
-   any part in full. Read small files whole.
-5. Skip `ro-crate-preview.html` and stored notebook outputs. Keep any
-   diagram of the workflow: for a format you can't read, it may be the
-   clearest view of the steps, and the researcher can be pointed to it.
-6. State your confidence, and set the profile's `completeness` to partial
-   where you couldn't read the format. "Explained from the README; the
-   workflow file itself is in a format I couldn't read in detail" is a
-   useful sentence.
+4. Keep files in the scratch folder, and read them in parts. First, list the
+   structure of a file (headings, names of functions or tasks, JSON keys).
+   Then read the parts that you need. Read small files completely.
+5. Skip `ro-crate-preview.html` and the stored outputs of notebooks. Keep
+   each diagram of the workflow. For a format that you cannot read, a
+   diagram can be the clearest view of the steps. You can also refer the
+   researcher to it.
+6. Tell the researcher how sure you are. Set `completeness` in the profile
+   to partial for the parts that you could not read. A useful sentence is:
+   "Explained from the README; the workflow file itself is in a format I
+   couldn't read in detail".
 
 ## Notes on common types
 
-**Jupyter notebooks (`.ipynb`).** JSON containing cells. Read markdown and
-code cells in order, and skip stored outputs, which can be very large.
-Imports reveal software; early cells usually load inputs.
+**Jupyter notebooks (`.ipynb`).** JSON with cells. Read the markdown and
+code cells in order. Skip the stored outputs, because they can be very
+large. The imports show the software. The first cells usually load the
+inputs.
 
-**WDL.** Files start with a `version` line and contain a `workflow` that
-`call`s `task`s. The workflow's `input` section is `provides`. Each task has
-`input`, `command`, `output` and `runtime` sections; `runtime` often names a
-container image.
+**WDL.** The files start with a `version` line. They hold a `workflow` that
+calls (`call`) tasks (`task`). The `input` section of the workflow gives
+`provides`. Each task has `input`, `command`, `output` and `runtime`
+sections. `runtime` frequently names a container image.
 
-**KNIME (`.knwf`).** A zipped archive of XML node settings, hard to read in
-detail. Rely on the description, README and any workflow image, and list
-node names if they are visible in the archive's folder names.
+**KNIME (`.knwf`).** A ZIP archive of XML node settings. It is difficult to
+read in detail. Use the description, the README and each workflow image. If
+the folder names in the archive show the node names, list them.
 
-**Scripts and Makefiles.** Treat each script or target as a step. Say what
-each one reads and writes, and in what order they are meant to run.
+**Scripts and Makefiles.** Each script or target is a step. Tell the
+researcher what each step reads and writes, and the order in which the steps
+run.
 
 **Unrecognised formats.** Fill the profile from the metadata and README
-only, mark it partial, and say so.
+only. Set it to partial, and tell the researcher.

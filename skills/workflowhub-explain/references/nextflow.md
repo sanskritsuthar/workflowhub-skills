@@ -1,26 +1,26 @@
 # Nextflow workflows
 
-How to fill the workflow profile (`workflow-profile.md`) from a Nextflow
-pipeline. Tested 2026-11-09 on workflow 1266 (an nf-core pipeline, 147
-files, ZIP 375 KB) unless noted.
+This guide tells you how to fill the workflow profile (`workflow-profile.md`)
+from a Nextflow pipeline. We tested it on 2026-11-09 on workflow 1266 (an
+nf-core pipeline, 147 files, ZIP 375 KB), unless the text tells otherwise.
 
 ## What's in a Nextflow crate
 
-A Nextflow crate is usually the whole pipeline repository. The TRS request
-(`tools.md`) returns only `main.nf`, which in modern pipelines mostly
-imports other files, so most of the profile needs the ZIP.
+A Nextflow crate usually holds the full repository of the pipeline. The TRS
+request (`tools.md`) gives only `main.nf`. In modern pipelines, `main.nf`
+mostly imports other files. Thus, most of the profile needs the ZIP.
 
-- **Read:** `README.md`, `nextflow_schema.json` (every parameter),
+- **Read:** `README.md`, `nextflow_schema.json` (all parameters),
   `nextflow.config` (defaults, profiles, the `manifest`), `main.nf`,
-  `workflows/*.nf` (the order of stages), `modules/` and `subworkflows/` (one
-  process each), `conf/` (resources, test profiles), `docs/usage.md` and
-  `docs/output.md`, `CITATIONS.md`.
-- **nf-core pipelines add:** `assets/schema_input.json` (the sample sheet's
-  columns), `conf/test.config`, `tests/` (nf-test).
+  `workflows/*.nf` (the order of the stages), `modules/` and
+  `subworkflows/` (one process each), `conf/` (resources, test profiles),
+  `docs/usage.md` and `docs/output.md`, `CITATIONS.md`.
+- **nf-core pipelines also have:** `assets/schema_input.json` (the columns
+  of the sample sheet), `conf/test.config`, `tests/` (nf-test).
 - **Skip:** `.github/`, `.pre-commit-config.yaml`, `modules.json`,
   `CODE_OF_CONDUCT.md`, `assets/multiqc_config.yml`, and the nf-core
-  utility subworkflows (`subworkflows/nf-core/utils_*`). They are project
-  plumbing.
+  utility subworkflows (`subworkflows/nf-core/utils_*`). These files are for
+  the management of the project.
 
 ## Filling the profile
 
@@ -37,7 +37,7 @@ imports other files, so most of the profile needs the ZIP.
 
 ## Commands
 
-On the extracted crate:
+Run these commands on the extracted crate:
 
 ```bash
 # Level 2: parameter groups and which parameters are required
@@ -70,30 +70,37 @@ grep -nE '^\s*(include|workflow)\b' main.nf
 grep -nE '^\s+[A-Z_]{3,}\s*\(' workflows/*.nf
 ```
 
-Level 4: a module's `script:` block, or its `publishDir` settings in
-`conf/modules.config`, when the question is about that step's command or
-output files.
+Level 4 is the `script:` block of a module, or its `publishDir` settings in
+`conf/modules.config`. Read them when the question is about the command or
+the output files of that step.
 
-What 1266 showed: 41 parameters in 9 groups; a sample sheet needing
-`sample` and `fastq_1`; 21 processes, 6 of them labelled `process_gpu`;
-Nextflow `>=26.04.0`; profiles for conda, docker, singularity, apptainer and
-others, plus `test` and `test_full`; three stages (`PREPROCESS_CUSTOM`,
-`RUN_CV`, `MODEL_TESTING`); nf-test tests.
+Results for 1266:
+
+- 41 parameters in 9 groups;
+- a sample sheet that needs `sample` and `fastq_1`;
+- 21 processes, of which 6 have the label `process_gpu`;
+- Nextflow `>=26.04.0`;
+- profiles for conda, docker, singularity, apptainer and others, and also
+  `test` and `test_full`;
+- three stages (`PREPROCESS_CUSTOM`, `RUN_CV`, `MODEL_TESTING`);
+- nf-test tests.
 
 ## Requirements to look out for
 
-- **GPUs and large resources:** `process_gpu` or `process_high` labels mean
-  the researcher needs matching hardware or must change the configuration.
+- **GPUs and large resources:** the labels `process_gpu` or `process_high`
+  tell you that the researcher needs applicable hardware, or must change the
+  configuration.
 - **Reference data:** `--genome` keys refer to a reference collection
-  (iGenomes) configured in the pipeline; `--fasta` and similar take the
-  researcher's own files.
-- **Container engine:** the profiles list which engines are supported.
+  (iGenomes) that the pipeline configures. `--fasta` and similar parameters
+  take files from the researcher.
+- **Container engine:** the profiles show which engines the pipeline
+  supports.
 
 ## Explaining it
 
-- Inputs are commonly a sample sheet (`--input samplesheet.csv`) plus
-  reference parameters. When mapping the researcher's data, the sample
-  sheet's required columns are usually the main task.
-- `CITATIONS.md` lists the tools to cite; workflowhub-cite will need it.
-- Don't read every module. List the processes in the order the workflow
-  calls them, and name the tool each one runs.
+- Inputs are usually a sample sheet (`--input samplesheet.csv`) and
+  reference parameters. To compare the data of the researcher with the
+  inputs, start with the required columns of the sample sheet.
+- `CITATIONS.md` lists the tools to cite. workflowhub-cite needs it.
+- Do not read each module. List the processes in the order in which the
+  workflow calls them. Give the tool that each process runs.
