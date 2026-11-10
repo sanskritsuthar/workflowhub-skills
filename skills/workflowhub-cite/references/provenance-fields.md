@@ -1,9 +1,9 @@
 # Provenance record fields
 
-The provenance file is a simple YAML list of entries, one per workflow
-version the project used or plans to use. It is meant to be readable by
-people and easy for agents to write correctly. Its fields were chosen to map
-onto RO-Crate later.
+The provenance file is a simple YAML list of entries. There is one entry for
+each workflow version that the project used or plans to use. People can read
+it, and agents can write it correctly without difficulty. We selected its
+fields so that they can map to RO-Crate later.
 
 ## Entry fields
 
@@ -24,14 +24,14 @@ onto RO-Crate later.
 | `tools_to_cite` | Tools used by the workflow that should be cited |
 | `notes` | Anything else worth keeping |
 
-Use `unknown` for anything not known. Don't leave fields out, so that every
-entry has the same shape.
+Write `unknown` for each fact that you do not know. Do not remove fields.
+Then all entries have the same shape.
 
 ## Indicative mapping to RO-Crate
 
-This mapping is a proposal for discussion, to be confirmed by the team. A
-`used` entry corresponds roughly to a run described with the Workflow Run
-Crate profile:
+This mapping is a proposal for discussion. The team must confirm it. A
+`used` entry is approximately the same as a run that the Workflow Run Crate
+profile describes:
 
 | Provenance field | RO-Crate term (indicative) |
 |---|---|

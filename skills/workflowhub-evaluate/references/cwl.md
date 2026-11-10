@@ -1,26 +1,29 @@
 # CWL workflows
 
-How to fill the workflow profile (`workflow-profile.md`) from a Common
-Workflow Language workflow. Tested 2026-11-09 on workflows 1765 (with its
-tool files) and 2367 (main file only) unless noted.
+This guide tells you how to fill the workflow profile (`workflow-profile.md`)
+from a Common Workflow Language workflow. We tested it on 2026-11-09 on
+workflows 1765 (with its tool files) and 2367 (main file only), unless the
+text tells otherwise.
 
 ## What's in a CWL crate
 
 - **The main workflow file:** YAML (sometimes JSON) with `cwlVersion` and
-  `class: Workflow`. The TRS request (`tools.md`) returns it alone.
-- **Tool and subworkflow files:** each step's `run` points to another
-  `.cwl` file (`class: CommandLineTool` or `Workflow`). 1765 has 43. They
-  are only in the ZIP.
-- **Often:** test job files giving input values (1765:
-  `tiny_test/test_main.chip.yml`), test data, and sometimes reference files
-  such as index files (1765 ships `.bt2` files).
-- **Size varies widely:** 78 KB (2347), 686 KB (1765), 61 MB (2367), 204 MB
-  (360 and 361). Check the size first; above the limit, the main file alone
-  still gives levels 1 and 2 except software.
-- **Packed files** hold everything in one `$graph` list; the entry point is
-  the entry with `id: main` (or `#main`). Not tested.
-- **Abstract CWL** describes a workflow written in another system, such as
-  Galaxy: structure only, no runnable tools. Say so if that's all there is.
+  `class: Workflow`. The TRS request (`tools.md`) gives only this file.
+- **Tool and subworkflow files:** the `run` of each step refers to another
+  `.cwl` file (`class: CommandLineTool` or `Workflow`). 1765 has 43 of them.
+  They are only in the ZIP.
+- **Frequently:** test job files that give input values (1765:
+  `tiny_test/test_main.chip.yml`), test data, and sometimes reference files,
+  for example index files (1765 has `.bt2` files).
+- **The size is very different between crates:** 78 KB (2347), 686 KB
+  (1765), 61 MB (2367), 204 MB (360 and 361). Examine the size first. If the
+  ZIP is larger than the limit, the main file alone still gives levels 1 and
+  2. Only the software is then missing.
+- **Packed files** hold all parts in one `$graph` list. The entry point is
+  the entry with `id: main` (or `#main`). We did not test this.
+- **Abstract CWL** describes a workflow that is written in a different
+  system, for example Galaxy. It shows only the structure, with no tools that
+  can run. If you have only abstract CWL, tell the researcher.
 
 ## Filling the profile
 
@@ -37,8 +40,9 @@ tool files) and 2367 (main file only) unless noted.
 
 ## Commands
 
-For block-style YAML with two-space indentation, the usual layout. For JSON
-CWL or other layouts, find the sections and read them by line range.
+These commands are for YAML in block style with two-space indentation. This
+is the usual layout. For JSON CWL or a different layout, find the sections
+and read them by line range.
 
 ```bash
 # Where the top-level sections start
@@ -63,28 +67,32 @@ grep -rhoE 'dockerPull: *[^ ]+' --include=*.cwl . | sort | uniq -c | sort -rn
 find . -name '*.yml' -o -name '*.yaml'
 ```
 
-An input whose `type:` line is empty has a nested type (an array or a
-record); read that input's lines. Level 3 adds each input's `doc`, read by
-line range, and each step's `in` sources. Level 4 is one tool file's
-`baseCommand` and `arguments`.
+If the `type:` line of an input is empty, the input has a nested type (an
+array or a record). Read the lines of that input. Level 3 adds the `doc` of
+each input, read by line range, and the `in` sources of each step. Level 4
+is the `baseCommand` and `arguments` of one tool file.
 
-What 1765 showed: 7 steps running tool files under `workflow_modules/`; a
-`genome` input with `secondaryFiles` (a Bowtie2 index) and a
-`genome_spike_in` input, both reference data; Docker images for samtools,
-bedtools, deeptools, Trim Galore and MultiQC; a test job in `tiny_test/`.
+Results for 1765:
+
+- 7 steps that run tool files in `workflow_modules/`;
+- a `genome` input with `secondaryFiles` (a Bowtie2 index) and a
+  `genome_spike_in` input, both reference data;
+- Docker images for samtools, bedtools, deeptools, Trim Galore and MultiQC;
+- a test job in `tiny_test/`.
 
 ## Requirements to look out for
 
 - **Reference data:** look for `secondaryFiles` and for input names such as
-  `genome`, `index`, `reference` or `database`. The workflow won't say where
-  to get them; the README or test job may.
+  `genome`, `index`, `reference` or `database`. The workflow does not tell
+  where to get them. The README or the test job can tell this.
 - **Containers:** most CWL tools name a Docker image. The researcher needs
-  Docker, Singularity or another engine their CWL runner supports.
+  Docker, Singularity or a different engine that their CWL runner supports.
 
 ## Explaining it
 
-- Follow the `in` sources to work out the order of steps.
-- `scatter` runs a step once per item in a list; `when` (CWL 1.2) runs it
-  only if a condition holds.
-- Feature requirements such as `ScatterFeatureRequirement` matter to the
-  runner, not usually to the researcher.
+- To find the order of the steps, follow the `in` sources.
+- `scatter` runs a step one time for each item in a list. `when` (CWL 1.2)
+  runs a step only if a condition is true.
+- Feature requirements, for example `ScatterFeatureRequirement`, are
+  important to the runner. Usually, they are not important to the
+  researcher.

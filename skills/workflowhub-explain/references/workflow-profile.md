@@ -1,26 +1,33 @@
 # The workflow profile
 
-The facts the WorkflowHub skills need about one version of one workflow, in a
-single shape that fits every workflow system. Build it once, save it, and let
-each skill read the part it needs. How to fetch and save responses is in
-`tools.md`; this file says what to collect, where to look, and what to write
-when something isn't there.
+The profile holds the facts that the WorkflowHub skills need about one
+version of one workflow. It has the same shape for every workflow system.
+Make it one time and save it. Each skill then reads the part that it needs.
 
-This file is identical in every skill that uses it. Update all copies
-together.
+`tools.md` tells you how to get and save responses. This file tells you
+which facts to collect, where to find them, and what to write when a fact is
+not available.
+
+This file is the same in every skill that uses it. If you change it, change
+all copies together.
 
 ## First rule: a starting point, never a limit
 
-The profile is the least a skill needs, not the most it may read. When the
-researcher's question needs something the profile doesn't hold, read more:
-from the files you already saved first, then with a targeted request. Say what
-you read and why. Nothing in this file is a reason to answer less than the
-question asks.
+The profile is the minimum that a skill needs. It is not the maximum that a
+skill can read. If the question of the researcher needs a fact that is not in
+the profile, read more:
 
-The only hard limits are the ones that protect the researcher and WorkflowHub,
-and they are set elsewhere: read only, never run workflow code, and the size
-and pacing limits on requests and downloads (`tools.md`, `ro-crate-consume`).
-Above a size limit, ask the researcher; don't silently answer with less.
+1. Look first in the files that you saved.
+2. Then send a request for the specific fact.
+3. Tell the researcher what you read and why.
+
+Nothing in this file is a reason to give a less complete answer.
+
+The only fixed limits protect the researcher and WorkflowHub. Other files set
+them: read only, never run workflow code, and the limits on size and speed
+of requests and downloads (`tools.md`, `ro-crate-consume`). If a download is
+larger than a size limit, ask the researcher. Do not give a smaller answer
+without a statement.
 
 ## Levels
 
@@ -31,45 +38,54 @@ Above a size limit, ask the researcher; don't silently answer with less.
 | 3. Full structure | level 2 with descriptions and defaults, plus the steps in order with the tool each runs and what feeds it | explain |
 | 4. Detail | one step's full settings or command, the inside of a subworkflow, a section of a README, a test definition | any skill, when the question needs it |
 
-"Usually enough" is a default, not a boundary. Go to the next level when the
-question turns on it. Two common cases:
+"Usually enough" is a default. It is not a boundary. Go to the next level
+when the question depends on it. Two frequent examples:
 
-- **Reference data** is often visible only at level 4. Galaxy workflow 1612
-  aligns reads against a cached `hg38` genome that must be installed on the
-  Galaxy server, and the only place that says so is one step's settings.
-  Nextflow's `--genome` parameter and its config are similar. When the
-  researcher's data or platform depends on it, look, even while evaluating;
-  each system guide says where (see "System guides" below).
+- **Reference data** is frequently visible only at level 4. Galaxy workflow
+  1612 aligns reads to a cached `hg38` genome. That genome must be installed
+  on the Galaxy server, and only the settings of one step show this.
+  Nextflow's `--genome` parameter and its config are similar. If the data or
+  the platform of the researcher depends on reference data, look for it. Do
+  this also when you evaluate. Each system guide tells you where to look (see
+  "System guides" below).
 - **A format question** ("will it take my BAM files?") needs the declared
-  format of one input. Read that input at level 3, not the whole workflow.
+  format of one input. Read that input at level 3. Do not read the full
+  workflow.
 
 ## Every field: a value, or why not
 
-Each field holds exactly one of these:
+Each field holds one of these:
 
 - **A value, with its source:** `api`, `bioschemas`, `crate`, `file:<path>`,
   `readme`, `internals` or `inferred`.
-- **`not declared`:** you checked the places that would hold it, and the
-  workflow doesn't say. A missing license is a finding, and evaluate rates
-  it.
-- **`unknown: <reason>`:** you couldn't check. For example the download was
-  declined, the files are only in an external repository, the format is one
-  you can't read, or the environment can't save files. Evaluate rates these
-  as unknown, never as weak.
-- **Several values, each with its source,** when sources disagree. Don't pick
-  one silently.
+- **`not declared`:** you examined the places that can hold the fact, and the
+  workflow does not give it. A missing license is a finding. Evaluate gives
+  it a rating.
+- **`unknown: <reason>`:** you could not examine the places. Examples: the
+  researcher did not agree to a download; the files are only in an external
+  repository; you cannot read the format; the environment cannot save files.
+  Evaluate rates these as unknown, never as weak.
+- **Several values, each with its source,** when the sources are different.
+  Do not select one value without a statement.
 
-Lists follow the same rule. An empty list means "checked, and there are
-none", with the source you checked. If you didn't check, write `unknown`.
-WorkflowHub's `internals` block is often empty because nothing was extracted,
-so an empty `internals` never makes an empty list.
+Lists follow the same rule. An empty list means "examined, and there are
+none". Give the source that you examined. If you did not examine a source,
+write `unknown`. WorkflowHub's `internals` block is frequently empty because
+WorkflowHub extracted nothing. Thus, an empty `internals` never gives an
+empty list.
 
 ## Level 1: registry facts and where to find them
 
-Try the sources in order, and stop when you have the fact. "API" is the JSON
-API response for the workflow and version; "crate" is the crate metadata;
-"Bioschemas" is the JSON-LD record (all in `tools.md`). Tested 2026-11-09 on
-workflows 248, 1266, 1612 and 1815 unless noted.
+Use the sources in the order of the table. Stop when you have the fact.
+
+- "API" is the JSON API response for the workflow and version.
+- "Crate" is the crate metadata. Read it with `ro-crate-consume`, also when
+  you need only one field from it, such as maturity or the file list.
+- "Bioschemas" is the JSON-LD record.
+
+`tools.md` tells you how to get each source. The table was tested on
+2026-11-09 on workflows 248, 1266, 1612 and 1815, unless the table tells
+otherwise.
 
 | Field | Where to look, in order | Notes |
 |---|---|---|
@@ -121,92 +137,105 @@ structure:
     diagram: "<path or not declared>"   # the crate's `image` on the main workflow, or an image file in the crate
 ```
 
-Data and settings sit in one list because workflow systems draw the line
-differently: in CWL settings are inputs, in Nextflow they are `params`, in
-Snakemake they are in the config file, and in Galaxy they are parameter
-inputs and values marked to be set at run time.
+Data and settings are in one list because workflow systems divide them
+differently. In CWL, settings are inputs. In Nextflow, they are `params`. In
+Snakemake, they are in the config file. In Galaxy, they are parameter inputs
+and values that the user sets at run time.
 
 ### Where structure comes from, for any system
 
-Work down this list. The first three cost little and often settle level 2.
+Use the sources in this order. The first three cost little, and they
+frequently give enough for level 2.
 
-1. **The crate's file list** (crate metadata, root `hasPart`): a quick look
-   at which files are there, such as a README, usage docs, tests, a
-   parameter schema or a `LICENSE`, without downloading any of them. It is
-   **incomplete**: 1815 lists 2 parts, but its ZIP holds 117 files, including
-   the 8 rule files the workflow runs; 1266 lists 23 and holds 147. Use it to
-   find files, never to conclude one is absent. Only a listing of the ZIP
-   shows what is really there.
+1. **The file list of the crate** (crate metadata, root `hasPart`). It shows
+   quickly which files are there, for example a README, usage documents,
+   tests, a parameter schema or a `LICENSE`. You do not download the files.
+   The list is **incomplete**. 1815 lists 2 parts, but its ZIP holds 117
+   files, with the 8 rule files that the workflow runs. 1266 lists 23 and
+   holds 147. Use the list to find files. Never use it to decide that a file
+   is not there. Only a list of the ZIP contents shows all files.
 2. **Declared inputs and outputs** in the crate or Bioschemas, and a test
-   suite the crate mentions. Often not declared: none of 1266, 1612, 1815 or
-   2367 declares any.
-3. **Hints:** the API's `internals` and `tools`. Use them to plan what to
-   read, not as the answer (`tools.md`).
-4. **The workflow file and its companions.** The authoritative source. How
-   to read each system's files is in its guide (see "System guides" below).
-   Because sources 1 to 3 are
-   so often empty, expect level 2 to need the main workflow file, which the
-   TRS request returns without the ZIP (`tools.md`). Companion files, such as
-   Nextflow modules, Snakemake rule files and CWL tool files, need the ZIP.
-5. **The README, docs and diagram,** for what the files leave unclear. A
-   diagram drawn by the authors can name the stages in their own words
-   (248's SVG: "Complex Setup" and the stages after it), which the workflow
-   file doesn't. One generated from the workflow shows the same graph as
-   the file, so read it for facts only when the file can't be read.
+   suite that the crate refers to. These are frequently not declared: 1266,
+   1612, 1815 and 2367 declare none.
+3. **Hints:** the `internals` and `tools` of the API. Use them to plan what
+   to read. Do not use them as the answer (`tools.md`).
+4. **The workflow file and its companion files.** These are the
+   authoritative source. The guide for each system tells you how to read
+   them (see "System guides" below). Sources 1 to 3 are frequently empty, so
+   level 2 usually needs the main workflow file. The TRS request gives that
+   file without the ZIP (`tools.md`). Companion files, for example Nextflow
+   modules, Snakemake rule files and CWL tool files, need the ZIP.
+5. **The README, documents and diagram,** for what the files do not make
+   clear. A diagram from the authors can name the stages in their own words.
+   For example, the SVG of 248 has "Complex Setup" and the stages after it.
+   The workflow file does not have these names. A diagram that a tool made
+   from the workflow shows the same graph as the file. Read it for facts only
+   when you cannot read the file.
 
-Tested 2026-11-09: level 2 was reached for 1266 (Nextflow), 1612 (Galaxy)
-and 1815 (Snakemake) from their files, and for 2367 (CWL) from the main file
-alone, because its ZIP (61 MB) is over the size limit.
+Tested 2026-11-09: we got level 2 from the files for 1266 (Nextflow), 1612
+(Galaxy) and 1815 (Snakemake). For 2367 (CWL), we got level 2 from the main
+file only, because its ZIP (61 MB) is larger than the size limit.
 
 ### When the files can't be read
 
-Sometimes level 2 or 3 can't come from the files: the workflow is only a
-link to an external repository, the crate is over the size limit and the
-researcher declines the download, the format is one you can't read, or there
-are more files than the question justifies. Then:
+Sometimes you cannot get level 2 or 3 from the files. For example:
 
-- fill what you can from sources 1, 2, 3 and 5, and from the main workflow
-  file if the TRS request can get it;
-- if the ZIP is over the size limit, tell the researcher its size and what
-  it would add, and ask (2367: the main CWL file gives inputs, outputs and
-  the step list; the tool definitions each step runs are in the 61 MB ZIP);
-- if the source repository is known (`versions[].remote` and `ref`), offer
-  to read the missing files from it at that `ref`. Ask first: reading
-  outside WorkflowHub needs the researcher's agreement;
-- set `completeness` to `partial`, with the reason;
-- give every list its source, so the researcher can see it came from a
-  README or a hint rather than the workflow itself;
-- still answer the question, and say which parts are partial and what would
-  complete them.
+- the workflow is only a link to an external repository;
+- the crate is larger than the size limit, and the researcher does not agree
+  to the download;
+- you cannot read the format;
+- there are more files than the question justifies.
+
+Then do these steps:
+
+1. Fill the profile from sources 1, 2, 3 and 5. If the TRS request can get
+   the main workflow file, use that file too.
+2. If the ZIP is larger than the size limit, tell the researcher its size
+   and what it would add. Ask before you download it. For example, for 2367
+   the main CWL file gives inputs, outputs and the step list. The tool
+   definitions for each step are in the 61 MB ZIP.
+3. If you know the source repository (`versions[].remote` and `ref`), offer
+   to read the missing files from it at that `ref`. Ask first: you need the
+   agreement of the researcher to read outside WorkflowHub.
+4. Set `completeness` to `partial`, and give the reason.
+5. Give the source of each list. Then the researcher can see if a list came
+   from a README or a hint, and not from the workflow.
+6. Still answer the question. Tell the researcher which parts are partial,
+   and what can make them complete.
 
 ### System guides
 
-What differs between workflow systems is only where each fact sits and how
-to extract it. That is in one guide per system: `galaxy.md`, `cwl.md`,
-`nextflow.md`, `snakemake.md` and, for anything else, `other-systems.md`.
-They are in the evaluate and explain skills. Each maps the profile's fields
-to that system's files, gives tested commands for levels 2 and 3, says what
-to skip, and lists the requirements that most often block a run.
+Between workflow systems, only two things are different: where each fact is,
+and how to extract it. One guide for each system tells you this: `galaxy.md`,
+`cwl.md`, `nextflow.md`, `snakemake.md`, and `other-systems.md` for all other
+systems. The guides are in the evaluate and explain skills. Each guide:
+
+- connects the fields of the profile to the files of that system;
+- gives tested commands for levels 2 and 3;
+- tells you what to skip;
+- lists the requirements that most frequently stop a run.
 
 ## Saving and reusing the profile
 
-Save the profile as `profile.yaml` in the workflow's scratch folder
-(`<scratch>/workflowhub/<id>/v<n>/`, beside the saved responses), with the
-date and the level reached. A later skill in the same session reuses it and
-adds a level when it needs one, rather than fetching again.
+Save the profile as `profile.yaml` in the scratch folder of the workflow
+(`<scratch>/workflowhub/<id>/v<n>/`, with the saved responses). Record the
+date and the level that you reached. A later skill in the same session uses
+the profile again. If it needs a higher level, it adds that level. It does
+not get the facts again.
 
-Its `workflow` block is the one in every skill's handoff record (`id`,
-`title`, `url`, `version`, `workflow_type`, `maturity`, `license`,
-`last_updated`, `team`), so it can be copied across. `last_updated` is the
-latest version's date.
+The `workflow` block of the profile is the same as the `workflow` block in
+the handoff record of each skill. Thus, you can copy it. Its fields are
+`id`, `title`, `url`, `version`, `workflow_type`, `maturity`, `license`,
+`last_updated` and `team`. `last_updated` is the date of the latest version.
 
 ## When you can't save files
 
-Some environments can't write files or run a JSON tool, for example when
-tools return their results straight into the conversation. Don't refuse the
-task, and don't skip the profile:
+Some environments cannot write files or run a JSON tool. An example is an
+environment where tools put their results directly into the conversation.
+Do not refuse the task. Do not skip the profile. Do these steps:
 
-- build it in your notes, from one workflow at a time;
-- take only the fields you need from each response and move on;
-- for comparisons of many workflows, tell the researcher that you can go
-  into depth on only a few, and ask which.
+1. Make the profile in your notes, for one workflow at a time.
+2. Take only the fields that you need from each response, and then
+   continue.
+3. If the researcher wants to compare many workflows, tell them that you can
+   examine only a few in detail. Ask which ones.

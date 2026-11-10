@@ -18,12 +18,12 @@ explains what these skills are for and the rules for changing them.
 
 | Component | What it does | Status |
 |---|---|---|
-| `workflowhub-find` | Turns a research need into a short, justified shortlist of workflows | Draft, tested once |
-| `workflowhub-evaluate` | Judges whether specific workflows fit a researcher's data and purpose, and compares candidates | Draft, not yet tested |
-| `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, not yet tested |
-| `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, not yet tested |
+| `workflowhub-find` | Turns a research need into a short, justified shortlist of workflows | Draft, tested (tests 1 and 7, latest 2026-11-09) |
+| `workflowhub-evaluate` | Judges whether specific workflows fit a researcher's data and purpose, and compares candidates | Draft, tested (test 2, 2026-11-09) |
+| `workflowhub-explain` | Explains what a workflow does, step by step, and maps its inputs to the researcher's data | Draft, tested (test 5, 2026-11-09) |
+| `workflowhub-cite` | Produces a citation, methods text and a provenance record in the researcher's project | Draft, tested (test 6, 2026-11-09) |
 | `fair-signposting` | Generic: reads FAIR Signposting links (Level 1 headers, Level 2 linksets) to find a resource's identifier, metadata and files | Draft, tested on WorkflowHub only |
-| `workflowhub-inspect` | Inspects a workflow version through signposting and its RO-Crate: profiles (Workflow RO-Crate, Testing, Run Crates), inputs, tests, recorded runs | Draft, not yet tested |
+| `workflowhub-inspect` | Inspects a workflow version through signposting and its RO-Crate: profiles (Workflow RO-Crate, Testing, Run Crates), inputs, tests, recorded runs | Draft, tested (2026-10-14; test 12, 2026-11-09) |
 | `ro-crate-consume` | Generic: retrieves and reads an RO-Crate (signposting, content negotiation, size and rate limits) with the `rocrate` library | Draft, tested on WorkflowHub only |
 | `workflowhub-reuse` | Prepares a chosen workflow to run in the researcher's environment | Outline only |
 | `workflowhub-track-updates` | Checks recorded workflows for new versions | Outline only |
@@ -61,8 +61,13 @@ flowchart TD
     AG -->|notes and provenance| WS[Researcher's project files]
 ```
 
-The skills never change anything on WorkflowHub. The only place they write is
-the researcher's own project, and only with the researcher's agreement.
+The skills never change anything on WorkflowHub. They write in two places:
+
+- a scratch folder, where they save WorkflowHub responses and workflow files
+  so that they read only what they need (see
+  [Design principles](#design-principles));
+- the researcher's own project, for records such as a citation and a
+  provenance entry, and only with the researcher's agreement.
 
 ## The researcher's journey
 
@@ -133,8 +138,11 @@ workflowhub-skills/
 Each skill folder contains:
 
 - `SKILL.md`: when to use the skill and the procedure to follow
-- `references/`: material loaded only when needed, including a copy of
-  `tools.md`
+- `references/`: material loaded only when needed. Every WorkflowHub skill
+  has copies of `tools.md` (how to reach WorkflowHub and save responses) and
+  `workflow-profile.md` (what to collect about a workflow, and what to write
+  when a fact is missing). Evaluate and explain also have the system guides:
+  `galaxy.md`, `cwl.md`, `nextflow.md`, `snakemake.md` and `other-systems.md`.
 - `assets/`: output templates and handoff records
 
 ## Using the skills
@@ -145,6 +153,19 @@ Each skill folder contains:
   such as Claude Code, Cursor, OpenAI Codex, Gemini CLI or GitHub Copilot.
 - Until the MCP server is available: an agent that can make HTTP requests,
   for example with curl or code execution, and internet access.
+- To save context: an agent that can save files and pull fields out of JSON.
+  The commands in the skills use [`jq`](https://jqlang.org/), a small
+  command-line JSON tool, together with `grep` and `awk`. Recent versions of
+  macOS include `jq`; on Linux it is a standard package, and on Windows it can
+  be installed separately or used through WSL. Python's built-in `json` module
+  works instead, and the skills tell the agent to use whatever is available.
+  With neither, the skills still work: the agent reads responses directly,
+  one workflow at a time, which uses more context.
+- To read RO-Crates: Python 3 and the [`rocrate`](https://pypi.org/project/rocrate/)
+  library, which `ro-crate-consume` uses. The agent installs it into a virtual
+  environment in the scratch folder, and only if the researcher agrees.
+  Without Python, `ro-crate-consume` reads single fields from the raw crate
+  metadata and says that it did.
 
 ### Install in Claude Code as a plugin
 
@@ -271,10 +292,23 @@ The skills never scrape web pages or answer from memory.
   and URL.
 - **"Unknown" rather than a guess.** Missing metadata is reported as
   missing. IDs, versions, DOIs, authors and licenses are never invented.
-- **Careful with context.** Agents fetch only what the current step needs.
+- **Save first, to save context.** Agents save WorkflowHub responses and
+  workflow files to a scratch folder, then read only the fields the current
+  step needs. One Galaxy workflow file of 160 KB gave about 5 KB of facts.
+  This keeps the agent's context for the researcher's question. It never
+  limits the answer: when a question needs more, the agent reads more, from
+  the saved files first.
+- **One profile for every workflow system.** The facts the skills need about
+  a workflow have one shape (`shared/workflow-profile.md`). Only where each
+  fact sits differs between Galaxy, CWL, Nextflow and Snakemake, and the
+  system guides cover that.
 - **Pause at decisions.** The researcher makes the choices.
 - **Instructions only.** No scripts, so the skills work in any agent that
   supports the format.
+- **Simplified Technical English.** Skill instructions are written about 80%
+  of the way to [ASD-STE100](https://www.asd-ste100.org/): one instruction per
+  sentence, short sentences, one term for one thing. See rule 12 in
+  [AGENTS.md](AGENTS.md).
 
 ## Maintaining the skills
 
@@ -308,25 +342,36 @@ The skills never scrape web pages or answer from memory.
 
 ## Known issues
 
-Found in the first test (details in [TESTING.md](TESTING.md)):
+Details of every test are in [TESTING.md](TESTING.md).
+
+Still open:
 
 - **Version numbers.** WorkflowHub has two identifiers for a version: a
   number used in URLs (for example 16) and a name researchers see (for
   example v1.5). The templates record only the number. Planned fix: add
   `version_name` to the shared `workflow` fields.
-- **"Last updated" dates.** A workflow's own "last updated" date can be older
-  than its latest version. Planned fix: define it in `tools.md` as the date
-  of the latest version.
-- **Outdated tool details.** In one case the agent described a tool the
-  workflow no longer uses. Planned fix: describe tools only from the
-  metadata of the version being reported.
-- **Maturity is often not set.** Planned fix: treat "unknown" as normal in
-  the evaluation criteria.
-- **Submitters can be bots.** Planned fix: tell `workflowhub-cite` to use
-  the creators, never the submitter.
-- **Workflow-type filter.** Resolved: `filter[workflow_type]=<key>` works
-  (keys such as `galaxy`, `nextflow`). Other keys are still to verify.
+- **Independent testing.** The skills have been tested only by the agent
+  that wrote them, and with the skills loaded directly, so whether each one
+  activates on its own has not been tested.
+- **Hand-offs need every skill installed.** Evaluate and explain hand work to
+  `workflowhub-inspect`, which uses `ro-crate-consume` and `fair-signposting`.
+  An install that leaves these out loses those steps.
+- **Untested formats.** Galaxy Format 2 (`.gxwf.yml`), packed CWL files and
+  the guide for other workflow systems have not been tested on WorkflowHub.
 
+Resolved on 2026-11-09:
+
+- **"Last updated" dates.** The workflow profile defines `last_updated` as
+  the date of the latest version (`created_at` of that version).
+- **Outdated tool details.** Tools are taken from the workflow file of the
+  version being reported. A registry description can be out of date: for
+  workflow 401 it still says cutadapt, but the file uses fastp.
+- **Maturity is often not set.** It is recorded as "not declared", and
+  evaluate rates a missing fact as unknown, not as weak.
+- **Submitters can be bots.** Creators never come from the submitter or the
+  Bioschemas `contributor`.
+- **Workflow-type filter.** `filter[workflow_type]=<key>` works with the keys
+  `galaxy`, `cwl`, `nextflow` and `snakemake`.
 
 ## License
 
