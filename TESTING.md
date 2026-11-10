@@ -110,6 +110,92 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: System guides moved to shared and tested
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass
+- **What happened:** Rewrote the Galaxy, CWL, Nextflow, Snakemake and
+  other-systems guides around the profile's fields, moved them to
+  `shared/systems/`, and copied them into evaluate as well as explain. Ran
+  every command block verbatim on real files: Galaxy 223, 248, 1594, 1612;
+  CWL 1765 (with its 43 tool files) and 2367 (main file only); Nextflow
+  1266; Snakemake 1815. All exited cleanly; output was 1.5 to 8.4 KB per
+  workflow.
+- **Verified against WorkflowHub:**
+  - Galaxy crates (223, 224, 248, 1594, 1612, 1616) hold the `.ga`, the
+    crate metadata, `ro-crate-preview.html` and a diagram image; 248 also
+    a README, changelog, tests file and test data. No XML. The editor's
+    layout is 3 to 10% of a `.ga` file and indentation 22 to 46%.
+  - Galaxy marks inputs wired from another step as `RuntimeValue` too, so
+    the run-time command removes them (1612's unicycler reads).
+  - Built-in Galaxy tools such as `Cut1` (1594) have no ToolShed path.
+  - CWL crate sizes: 78 KB (2347), 686 KB (1765), 61 MB (2367), 204 MB
+    (360, 361); 1333 sends no size.
+  - 1266 has six `process_gpu` processes; 1815 has six entry rules in its
+    Snakefile instead of `rule all`, and 66 files in `envs/`.
+- **Issues:** Galaxy Format 2 and packed CWL weren't in the sample and are
+  marked untested. The other-systems guide is untested.
+
+### 2026-11-09: Workflow profile on four degraded cases
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass with issues (fixed in the same change)
+- **What happened:** Built level 1 and 2 profiles, following
+  `workflow-profile.md`'s source order, for 1266 (Nextflow, empty
+  `internals`, no creators), 1612 (Galaxy, no repository or maturity, all
+  outputs unlabelled), 1815 (Snakemake, logic in 8 rule files) and 2367 (CWL,
+  empty `internals`, 61 MB ZIP). Every level 1 field ended as a value with a
+  source or `not declared`. Level 2 was reached from the files for 1266,
+  1612 and 1815, and from the main file alone for 2367.
+- **Verified against WorkflowHub:** `versions[].remote` and `ref` give the
+  source repository for 248, 360, 1266, 1815 and 2367. The API's `creators`
+  carries names and ORCIDs (248, 1815, 2367). The team name is only in
+  Bioschemas `producer`. Maturity differed for 1266 (crate Stable,
+  Bioschemas none). No crate of the four declares inputs or outputs.
+  Every code block in the Galaxy, CWL, Nextflow and Snakemake guides ran
+  verbatim on these files (output 0.4 to 7.4 KB).
+- **Issues found and fixed:**
+  - The crate's `hasPart` is not a full file list: 1815 lists 2 parts and
+    holds 117 files, including the 8 rule files; 1266 lists 23 and holds 147.
+  - Galaxy 1612 needs `hg38` (minimap2) and `hg38full` (bowtie2) on the
+    server, and 1594 the BLAST database `refseq_mitochondrion`, visible only
+    in step settings, some of them JSON stored as text. A level 2 summary
+    alone would have missed them; the Galaxy guide now has a scan for them.
+  - The Snakemake rule outline was 21.5 KB for 96 rules; listing rule names
+    first takes 2.4 KB.
+  - Galaxy inputs' collection type, value type and optional flag are in
+    their settings; the Galaxy guide's input command now reads them.
+
+### 2026-11-09: Response sizes and save-first extraction
+
+- **Agent and route:** Claude Code desktop on macOS, public API (interim)
+- **Result:** pass
+- **What happened:** Saved responses to a scratch folder and measured them,
+  then checked the extraction commands now in `shared/tools.md` and the
+  explain guides. Metadata responses for workflows 42, 123, 248, 1441 and
+  1625 were 3 to 13 KB; extracting the fields evaluate needs from 248 gave
+  740 bytes. Searches were 17 KB ("rna-seq") and 39 KB ("assembly", 302
+  hits); hits carry only ID and title. The Galaxy file for 248 version 7 was
+  88 KB (subworkflows 14 KB and `tool_state` 7.5 KB of the step data); its
+  inputs, steps and outputs extracted to about 4 KB.
+- **Verified against WorkflowHub:** TRS descriptor type codes `CWL` (360 v2),
+  `NFL` (1266 v7) and `SMK` (1815 v7) return HTTP 200 with the main file in
+  `content`. Outline commands in the CWL, Nextflow and Snakemake guides
+  ran on those three files.
+- **`internals` sample (35 workflows):** empty for all 11 Nextflow (57, 966,
+  979, 1002, 1005, 1058, 1266, 1864, 2199, 2341, 2374) and all 10 Snakemake
+  (554, 791, 1091, 1102, 1815, 1967, 2360, 2361, 2362, 2373); empty for CWL 2367, filled for the other 8 CWL;
+  filled for all 5 Galaxy (223, 224, 1594, 1612, 1616). Compared with the
+  Galaxy files for 248, 223, 1594 and 1612: steps and inputs matched; 1594
+  dropped 1 of 6 outputs (unlabelled) and 1612 gave 16 of 18 outputs, all as
+  `_anonymous_output_<n>`; input types were `File` or `string` without
+  Galaxy formats. 248 versions 1, 4 and 7 had identical `internals`, and the
+  file structure didn't change either, so version tracking is not
+  established.
+- **Issues:** the Nextflow and Snakemake commands for modules and rule
+  files were checked only against the main file, since the others need
+  the crate's ZIP, which was not downloaded.
+
 ### 2026-10-14: Inspect workflow 123 version 1
 
 - **Agent and route:** Claude Code, public API, Bioschemas and a saved crate

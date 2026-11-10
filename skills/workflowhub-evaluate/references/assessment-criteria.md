@@ -13,9 +13,12 @@ notes below say how.
 
 **Input and output fit.** Does it accept the researcher's data and produce
 what they need?
-- Evidence: declared inputs and outputs, formats, description.
-- Unknown is common here. Say what would settle it, often a walkthrough with
-  workflowhub-explain.
+- Evidence: the profile's level 2 (what the user provides and the outputs,
+  with formats), the description.
+- When the researcher's data is known, check the specific inputs it would
+  go into, reading the workflow file if the profile doesn't give their
+  formats. Otherwise unknown is common here: say what would settle it, often
+  a walkthrough with workflowhub-explain.
 
 **Platform fit.** Can the researcher run it?
 - Evidence: workflow type compared with the systems and computing
@@ -33,7 +36,7 @@ what they need?
 
 **Documentation.** Could the researcher understand and run it?
 - Evidence: quality of the description, linked documentation, explained
-  parameters, example or test data.
+  parameters, example or test data, a diagram (the profile's `docs`).
 
 ## Trust
 
@@ -53,8 +56,11 @@ what they need?
 **Requirements.** What would running it take?
 - Evidence: reference data or databases, containers or software
   environments, compute hints, platform-specific features.
-- Often unknown from metadata alone. Record it as a question for
-  workflowhub-explain.
+- Evidence: the profile's level 2 requirements, and the tools the authors
+  list.
+- Reference data is often visible only in step settings or parameters. If
+  the researcher's purpose or platform depends on it, look there. Otherwise
+  record it as a question for workflowhub-explain.
 
 ## Overall verdict
 
