@@ -11,8 +11,9 @@ judge, inspect, explain and cite workflows. They are instructions, not code:
 nothing here runs. The researcher is the end user, and the agent following a
 skill is acting on their behalf.
 
-The skills are read-only on WorkflowHub. They write only into the researcher's
-own project, and only with the researcher's agreement.
+The skills are read-only on WorkflowHub. They save WorkflowHub responses in a
+scratch folder, so that they read only what they need. They write into the
+researcher's own project only with the researcher's agreement.
 
 This file is read by several agents: Claude Code through `CLAUDE.md`, and
 OpenAI Codex and others directly. Keep it agent-neutral. The skills themselves
