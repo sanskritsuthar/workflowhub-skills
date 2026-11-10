@@ -1,9 +1,9 @@
 # Search strategies for WorkflowHub
 
-## Vary the angle, not just the wording
+## Change the angle, not only the words
 
-Workflow titles are written by their authors, so the same analysis can appear
-under very different names. Cover several angles:
+The authors of a workflow write its title. Thus, the same analysis can have
+very different names. Search from several angles:
 
 | Angle | Example for "bacterial genomes from nanopore reads" |
 |---|---|
@@ -27,29 +27,32 @@ Other fields:
 - climate downscaling, bias correction
 - molecular dynamics, MD simulation
 
-Also try spelling variants, such as hyphenated and unhyphenated forms and
-British and American spellings ("modelling" and "modeling").
+Also try different spellings: with and without hyphens, and British and
+American spellings ("modelling" and "modeling").
 
 ## Controlled vocabularies
 
-In the life sciences, many WorkflowHub workflows are annotated with EDAM
-operations and topics. EDAM-style queries such as "Sequence assembly",
-"Variant calling" or "Genome annotation" can surface workflows whose titles
-use different wording. In other fields, try the terms used in that field's
-methods sections and standard method names.
+In the life sciences, many WorkflowHub workflows have EDAM operations and
+topics. Queries in EDAM terms, such as "Sequence assembly", "Variant
+calling" or "Genome annotation", can find workflows with different words in
+their titles. In other fields, try the terms from the methods sections of
+that field, and standard method names.
 
 ## Using filters
 
-- Search with free text first; add filters only for stated constraints.
-- Filters exclude silently. If a filtered search returns nothing, rerun it
-  without filters before concluding that nothing exists.
-- Filter values are WorkflowHub's internal keys, not display names. If a
-  "list filter values" capability is available, use it rather than guessing.
+- Search with free text first. Add filters only for constraints that the
+  researcher gave.
+- A filter removes workflows without a statement. If a search with filters
+  gives no results, do the search again without the filters. Do this before
+  you decide that nothing exists.
+- Filter values are internal keys of WorkflowHub, not the names on its web
+  pages. If a "list filter values" capability is available, use it. Do not
+  guess.
 
 ## Stopping
 
-Three rounds of searching and adjusting is usually enough. Beyond that,
-report what was tried and what was found, including partial matches.
+Three rounds of search and change are usually enough. After that, report
+what you tried and what you found, with the partial matches.
 
 ## Worked examples
 
@@ -58,15 +61,16 @@ isolates and want to assemble genomes. We use Galaxy."
 
 1. Queries: "nanopore assembly", "bacterial genome assembly", "long read
    assembly", "flye".
-2. Filter by workflow type Galaxy, because the researcher stated it.
-3. If there are too few results, rerun the two broadest queries without the
-   filter, and list strong non-Galaxy matches separately as alternatives.
+2. Filter by the workflow type Galaxy, because the researcher gave it.
+3. If there are too few results, do the two broadest queries again without
+   the filter. List good matches that are not Galaxy workflows separately,
+   as alternatives.
 
 **Species distributions, no stated platform.** "I want to model species
 distributions from occurrence records and climate layers."
 
 1. Queries: "species distribution model", "niche model", "SDM",
    "occurrence data".
-2. No filters, because no platform or constraint was stated.
-3. In the shortlist, note each candidate's workflow system so the researcher
-   can say which they can run.
+2. Use no filters, because the researcher gave no platform or constraint.
+3. In the shortlist, give the workflow system of each candidate. Then the
+   researcher can tell you which systems they can use.

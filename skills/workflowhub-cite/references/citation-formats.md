@@ -1,13 +1,14 @@
 # Citation formats
 
-Use plain text by default, BibTeX on request or for LaTeX projects, and a
-named journal style if the researcher gives one. Whatever the format,
-include: creators, year, title, version, publisher (WorkflowHub), resource
-type, and DOI or versioned URL.
+Use plain text as the default. Use BibTeX if the researcher asks for it, or
+for LaTeX projects. If the researcher names a journal style, use that style.
+Each format must include: creators, year, title, version, publisher
+(WorkflowHub), resource type, and DOI or versioned URL.
 
 ## Plain text
 
-This follows the common pattern used for DOI-registered software and data.
+This format follows the usual pattern for software and data that are
+registered with a DOI.
 
 With a DOI:
 
@@ -22,17 +23,20 @@ WorkflowHub. https://workflowhub.eu/workflows/<id>?version=<n>
 
 Notes:
 
-- **Creators:** as listed in WorkflowHub, in the same order. Use family name
-  and initials only if the full names are given; don't guess initials.
-- **Organisational author:** if only a team is listed, use the team name.
-- **Year:** the year this version was created or published. If it isn't
-  available, write "n.d." and flag it.
-- **DOI:** only from WorkflowHub's metadata. Never build one from a pattern.
+- **Creators:** as WorkflowHub lists them, in the same order. Use the family
+  name and initials only if WorkflowHub gives the full names. Do not guess
+  initials.
+- **Organisational author:** if WorkflowHub lists only a team, use the team
+  name.
+- **Year:** the year when WorkflowHub made or published this version. If the
+  year is not available, write "n.d." and tell the researcher.
+- **DOI:** take it only from the metadata of WorkflowHub. Never make a DOI
+  from a pattern.
 
 ## BibTeX
 
-`@misc` works in every BibTeX setup. If the project uses biblatex, `@software`
-is a better fit and accepts the same fields.
+`@misc` works in all BibTeX setups. If the project uses biblatex,
+`@software` is better. It accepts the same fields.
 
 ```bibtex
 @misc{workflowhub_<id>_v<n>,
@@ -47,17 +51,21 @@ is a better fit and accepts the same fields.
 }
 ```
 
-Without a DOI, omit `doi`, use the versioned WorkflowHub URL for `url`, and
-add `urldate = {<YYYY-MM-DD>}`.
+Without a DOI:
 
-For an organisational author, wrap the name in an extra pair of braces so
-BibTeX doesn't split it: `author = {{<Team name>}}`.
+- Do not include `doi`.
+- Use the versioned WorkflowHub URL for `url`.
+- Add `urldate = {<YYYY-MM-DD>}`.
+
+For an organisational author, put the name in a second pair of braces. Then
+BibTeX does not divide the name: `author = {{<Team name>}}`.
 
 ## Associated publications and tools
 
-- Cite a linked publication in the journal's usual article style, using the
-  details WorkflowHub gives. If details are incomplete, give what you have
-  and mark the gaps.
-- For tools used by the workflow, use references the workflow provides
-  (such as a `CITATIONS.md` file). Otherwise list the tool name and version
-  and note that a reference is needed.
+- Cite a linked publication in the usual article style of the journal. Use
+  the details that WorkflowHub gives. If the details are incomplete, give
+  the details that you have, and mark the gaps.
+- For tools that the workflow uses, use the references that the workflow
+  gives (for example a `CITATIONS.md` file). If there are none, list the
+  name and version of the tool. Tell the researcher that a reference is
+  necessary.

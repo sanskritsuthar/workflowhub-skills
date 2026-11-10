@@ -110,6 +110,126 @@ Add an entry for each test run, newest first.
 - **Verified against WorkflowHub:**
 - **Issues:**
 
+### 2026-11-09: Full rollout of Simplified Technical English, tests 1, 2, 5, 6, 7, 12 and 16
+
+- **Test:** static checks of all rewritten files, then test prompts 1, 2, 5,
+  6, 7, 12 and 16 with the final text.
+- **Agent and route:** Claude Code desktop on macOS, public API (interim);
+  crates read with `ro-crate-consume` and `rocrate` 0.16.0 in a scratch
+  virtual environment. Skills were loaded directly, so activation was not
+  tested (descriptions are unchanged from GitHub `main`). The tester wrote
+  the skills.
+- **Result:** pass with issues (fixed)
+- **Static checks:** inventories for all 17 rewritten files found every
+  instruction in the new text; code blocks, tables and citation templates
+  byte-identical; shared copies in sync; frontmatter descriptions and the
+  generic skills unchanged from `main`; every guide command block re-run
+  verbatim on 401, 1594, 1612, 1765, 1266 and 1815 with the same output
+  sizes; `claude plugin validate .` passed.
+- **What happened:**
+  - Test 1 (find): four Galaxy-filtered queries, 78 unique workflows, a
+    shortlist of seven; IWC 401 and 1201 first, as a pair. No workflow
+    files downloaded.
+  - Test 2 (evaluate, top two from test 1): stages detected and ordered;
+    the hand-over now fully stated (1201's header setting: no for STAR
+    counts, yes for featureCounts); `profile.yaml` saved for both.
+  - Test 5 (explain 401 for `sample1_R1.fastq.gz` files): level 3 from the
+    saved file; seven stages; no setting has a default; inputs mapped
+    (needs preparation, missing GTF, unclear genome and strandedness).
+  - Test 6 (cite 1201 v11 on usegalaxy.eu): citation with the versioned
+    URL; `workflow-provenance.yaml` written to the project and parsed.
+  - Test 7: Snakemake variant-calling candidates found; upload declined.
+  - Test 12 (inspect 401): inputs "not declared" in the crate, with a
+    pointer to the 11 inputs in the workflow file; Workflow RO-Crate
+    structure observed but not declared.
+  - Test 16: the crate of 2367 v1 is 61.6 MB (HEAD), over the limit; the
+    agent stops and asks.
+- **Verified against WorkflowHub:**
+  - 1201 v11: the DataCite XML shows DOI
+    10.48546/workflowhub.workflow.1201.11, but doi.org returned 404, the
+    API lists none and there is no `cite-as` link. The DOI rule kept it out
+    of the citation.
+  - 401 v19: the API lists one creator (Lucille Delisle, no ORCID); the
+    crate lists Lucille Delisle (ORCID 0000-0002-1964-4960) and Pavankumar
+    Videm. Found only by reading the crate with `rocrate`.
+- **Issues:**
+  - Explain and evaluate reused only an "inspection record"; they now also
+    reuse a saved profile that has the crate facts.
+  - The test project links only find, evaluate, explain and cite, not
+    inspect, `ro-crate-consume` or `fair-signposting`, so explain and
+    evaluate cannot hand over to them there. Inspect was followed from its
+    file.
+  - `rocrate` on this Mac's Python 3.9 prints a urllib3 LibreSSL warning;
+    harmless.
+
+### 2026-11-09: Test 2 (Evaluate) on the Simplified Technical English pilot
+
+- **Test:** test 2, "Compare the top two from that shortlist. It's for a
+  paper. Which should I use?" Test 1's session wasn't available, so the
+  two workflows its log names were used: 401 (rnaseq-pe/main) and 1201
+  (rnaseq-de/main), with test 1's context (mouse liver, paired-end,
+  treated vs control, Galaxy).
+- **Agent and route:** Claude Code desktop on macOS, public API (interim).
+  The skill was loaded directly, so activation was not tested. The tester
+  wrote the skill and its references, and did not reread `tools.md`, the
+  profile or the Galaxy guide, which were already in context: a fresh
+  agent should repeat this test.
+- **Result:** pass with issues (fixed)
+- **What happened:** The procedure ran in order: context, level 1 and 2
+  profiles for both workflows, ratings for all eight criteria with sources,
+  comparison, concerns, what WorkflowHub can't tell, and a stop for the
+  decision. 10 requests (2 metadata, 2 Bioschemas, 2 Link headers, 2 crate
+  metadata, 2 TRS descriptors); 257 KB saved, about 15 KB read into
+  context. Verdict: both fit with caveats, used together, 401 then 1201.
+- **Verified against WorkflowHub:** 401 v19 (upstream 1.8, 2026-10-30) and
+  1201 v11 (upstream 0.12, 2026-09-08); MIT; team IWC (Bioschemas);
+  creators Lucille Delisle (no ORCID) and Pavankumar Videm (ORCID); no DOI
+  on any version, no `cite-as` link, no linked publication; maturity not
+  declared in crate or Bioschemas; README and tests file in both crates.
+  401's file uses fastp, while its registry description still says
+  cutadapt, and its `tools` list names 3 of its 10 tools. 401 needs a STAR
+  index held on the Galaxy server; 1201 needs no server reference.
+- **Issues:**
+  - The two workflows are consecutive stages, not alternatives, and the
+    skill's comparison step assumed alternatives. Step 4 now says how to
+    handle stages.
+  - The Galaxy reference scan listed four STAR settings that only sit
+    under `refGenomeSource`. Fixed in the guide (it now checks the last
+    named part of each key) and retested on six workflows.
+  - Running the scans on subworkflows needed a command the guide didn't
+    give; it does now.
+  - `tools.md` sends crate reading through `ro-crate-consume` and the
+    `rocrate` library. For three level 1 facts (maturity, file list,
+    tests) the test read the metadata-only response directly instead.
+    Open question: should the profile allow that for single fields?
+  - Whether 401's count table has a header line (a setting in 1201) was
+    left unknown, for workflowhub-explain.
+
+### 2026-11-09: Simplified Technical English pilot on evaluate
+
+- **Test:** style and coverage check of the rewritten `workflowhub-evaluate`
+  `SKILL.md` (80% ASD-STE100); not yet a run of a test prompt.
+- **Agent and route:** Claude Code desktop on macOS; no WorkflowHub requests
+- **Result:** pass
+- **What happened:** Listed the 55 instructions and facts in the previous
+  text, rewrote the body, and checked that each one is in the new text.
+  A rough style check (sentence length, -ing words, passive voice, phrasal
+  verbs) gave:
+
+  | | Before | After |
+  |---|---|---|
+  | Sentences | 92 | 167 |
+  | Mean words per sentence | 14.0 | 8.6 |
+  | Over 20 words | 23 | 0 |
+  | Over 25 words | 13 | 0 |
+  | Passive constructions | 10 | 1 (a false positive) |
+  | Phrasal verbs | 3 | 0 |
+  | Words in the file | 1,514 | about 1,710 |
+
+  The frontmatter is unchanged except `metadata.version`.
+- **Issues:** the skill had not been run on a test prompt; see the next
+  entry above.
+
 ### 2026-11-09: System guides moved to shared and tested
 
 - **Agent and route:** Claude Code desktop on macOS, public API (interim)
